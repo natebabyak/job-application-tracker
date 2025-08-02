@@ -3,32 +3,28 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { DashboardApplicationForm } from "./dashboard-application-form";
+import { DashboardForm } from "./form";
 
 export function DashboardDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Add application</Button>
+        <Button>Add New Application</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New application</DialogTitle>
-          <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </DialogDescription>
+          <DialogTitle>App New Application</DialogTitle>
         </DialogHeader>
-        <DashboardApplicationForm />
+        <DashboardForm />
         <DialogFooter>
+          <Button type="submit">Submit</Button>
           <DialogClose asChild>
-            <Button>Close</Button>
+            <Button variant={"destructive"}>Cancel</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

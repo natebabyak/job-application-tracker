@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { DashboardDialog } from "./dashboard-dialog";
+import { DashboardDialog } from "./dialog";
 
 const items = [
   {

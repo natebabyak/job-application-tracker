@@ -3,9 +3,9 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { DashboardSidebar } from "./dashboard-sidebar";
+import { DashboardSidebar } from "./sidebar";
 
-export default function Page() {
+export default function Dashboard() {
   return (
     <SidebarProvider>
       <DashboardSidebar />
