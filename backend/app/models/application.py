@@ -1,18 +1,18 @@
-from datetime import date
+from datetime import date, datetime
 from enum import Enum
 from sqlmodel import Field, SQLModel
 from uuid import UUID, uuid4
 
 
-class ApplicationStatus(str, Enum):
+class Status(str, Enum):
     """Represents the status of a job application."""
-    accepted = 'accepted'
-    applied = 'applied'
-    ghosted = 'ghosted'
-    interviewing = 'interviewing'
-    offered = 'offered'
-    rejected = 'rejected'
-    withdrawn = 'withdrawn'
+    ACCEPTED = "accepted"
+    APPLIED = "applied"
+    GHOSTED = "ghosted"
+    INTERVIEWING = "interviewing"
+    OFFERED = "offered"
+    REJECTED = "rejected"
+    WITHDRAWN = "withdrawn"
 
 
 class Application(SQLModel, table=True):
@@ -22,26 +22,27 @@ class Application(SQLModel, table=True):
     Attributes
     ----------
     id : UUID
-        Unique identifier of the application.
-
+        Unique identifier of the application. Defaults to a generated UUID.
     position : str
-        Title of the position applied for.
-
+        Name of the position applied for.
     company : str
-        Name of the company the application was submitted to.
-
+        Name of the company applied to.
     date : date
-        Date the application was submitted.
-
-    status : ApplicationStatus
+        Submission date of the application.
+    status : Status
         Current status of the application.
-
     user_id : UUID
         Unique identifier of the user who submitted the application.
+    created_at : datetime
+        Timestamp of when the application was created. Defaults to the current time.
+    updated_at : datetime
+        Timestamp of when the application was last updated. Defaults to the current time.
     """
     id: UUID = Field(default_factory=uuid4, primary_key=True)
-    position: str
-    company: str
+    position: str = Field(max_length=255)
+    company: str = Field(max_length=255)
     date: date
-    status: ApplicationStatus
-    user_id: UUID = Field(foreign_key="user.id")
+    status: Status
+    user_id: UUID = Field(foreign_key="user.id", index=True)
+    created_at: datetime = Field(default_factory=datetime.now)
+    updated_at: datetime = Field(default_factory=datetime.now)
