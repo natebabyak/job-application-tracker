@@ -1,27 +1,54 @@
 from datetime import date, datetime
 from enum import Enum
-from sqlmodel import Field, SQLModel
+from .user import User
+from sqlmodel import Field, Relationship, SQLModel
 from uuid import UUID, uuid4
+from typing import Optional
 
 
 class Status(str, Enum):
-    """Enumeration of job application statuses."""
+    """Represents the status of an application."""
     ACCEPTED = "accepted"
-    APPLIED = "applied"
-    GHOSTED = "ghosted"
+    DECLINED = "declined"
     INTERVIEWING = "interviewing"
     OFFERED = "offered"
     REJECTED = "rejected"
-    WITHDRAWN = "withdrawn"
+    SUBMITTED = "submitted"
 
 
 class Application(SQLModel, table=True):
-    """Represents a job application."""
+    """
+    Model for storing an application.
+
+    Attributes
+    ----------
+    id: UUID
+        Unique identifier of the application.
+    position_title : str
+        Title of the position applied for.
+    company_name : str
+        Name of the company applied to.
+    date_submitted : date
+        Date the application was submitted.
+    status : Status
+        Current status of the application.
+    owner_id : UUID
+        Unique identifier of the user who owns the application.
+    owner : User | None
+        User who owns the application.
+    created_at: datetime
+        Timestamp when the application was created.
+    updated_at: datetime
+        Timestamp when the application was last updated.
+    """
     id: UUID = Field(default_factory=uuid4, primary_key=True)
-    position: str = Field(max_length=255)
-    company: str = Field(max_length=255)
-    date: date
+    position_title: str
+    company_name: str
+    date_submitted: date
     status: Status
-    user_id: UUID = Field(foreign_key="user.id", index=True)
+
+    owner_id: UUID = Field(foreign_key="user.id", index=True)
+    owner: Optional["User"] = Relationship(back_populates="applications")
+
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
