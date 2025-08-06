@@ -1,4 +1,10 @@
 services:
+  db:
+    image: postgres:17
+    restart: always
+    ports:
+      - 5432:5432
+
   backend:
     build: ./backend
     ports:
@@ -12,11 +18,6 @@ services:
       - 3000:3000
     depends_on:
       - backend
-
-  db:
-    image: postgres:17
-    ports:
-      - 5432:5432
 
 volumes:
   postgres_data:

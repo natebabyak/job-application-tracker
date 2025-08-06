@@ -40,15 +40,12 @@ def delete_user(user_id: UUID, session: Session) -> None:
     user_id : UUID
         Unique identifier of user to delete.
     session : Session
-
-
-    Returns
-    -------
+        Database session.
 
     Raises
     ------
     HTTPException
-
+        If the user is not found.
     """
     user = session.get(User, user_id)
 
@@ -57,5 +54,3 @@ def delete_user(user_id: UUID, session: Session) -> None:
 
     session.delete(user)
     session.commit()
-
-    return
