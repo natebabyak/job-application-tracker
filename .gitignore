@@ -2,7 +2,6 @@
 .vscode
 
 # Backend
-/backend/__pycache__
 /backend/app/__pycache__
 /backend/venv
 /backend/.env

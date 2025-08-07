@@ -1,5 +1,5 @@
+from app.models.application import Status
 from datetime import date
-from models.application import Status
 from sqlmodel import SQLModel
 from uuid import UUID
 

@@ -1,4 +1,4 @@
-from models.user import Provider
+from app.models.user import Provider
 from sqlmodel import SQLModel
 from typing import Optional
 from uuid import UUID
