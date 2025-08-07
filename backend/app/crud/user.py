@@ -1,6 +1,6 @@
+from app.models.user import User
+from app.schemas.user import UserCreate
 from fastapi import HTTPException
-from models.user import User
-from schemas.user import UserCreate
 from sqlmodel import select, Session
 from uuid import UUID
 
