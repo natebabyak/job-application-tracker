@@ -1,9 +1,8 @@
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from enum import Enum
-from .user import User
+from app.models.user import User
 from sqlmodel import Field, Relationship, SQLModel
 from uuid import UUID, uuid4
-from typing import Optional
 
 
 class Status(str, Enum):
@@ -24,17 +23,17 @@ class Application(SQLModel, table=True):
     ----------
     id: UUID
         Unique identifier of the application.
-    position_title : str
+    position : str
         Title of the position applied for.
-    company_name : str
+    company : str
         Name of the company applied to.
-    date_submitted : date
+    date : date
         Date the application was submitted.
     status : Status
         Current status of the application.
     owner_id : UUID
         Unique identifier of the user who owns the application.
-    owner : User | None
+    owner : User
         User who owns the application.
     created_at: datetime
         Timestamp when the application was created.
@@ -42,13 +41,15 @@ class Application(SQLModel, table=True):
         Timestamp when the application was last updated.
     """
     id: UUID = Field(default_factory=uuid4, primary_key=True)
-    position_title: str
-    company_name: str
-    date_submitted: date
+    position: str
+    company: str
+    date: date
     status: Status
-
     owner_id: UUID = Field(foreign_key="user.id", index=True)
-    owner: Optional["User"] = Relationship(back_populates="applications")
 
-    created_at: datetime = Field(default_factory=datetime.now)
-    updated_at: datetime = Field(default_factory=datetime.now)
+    owner: User = Relationship(back_populates="applications")
+
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc))
