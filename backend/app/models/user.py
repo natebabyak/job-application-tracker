@@ -27,7 +27,7 @@ class User(SQLModel, table=True):
     email: Optional[str]
         Email address from the user's provider.
     provider_id : str
-        Unique identifier from user's provider.
+        Unique identifier from the user's provider.
     image : Optional[str]
         Profile image URL from the user's provider.
     name : Optional[str]

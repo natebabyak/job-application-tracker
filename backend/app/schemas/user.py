@@ -1,4 +1,5 @@
 from app.models.user import Provider
+from datetime import datetime
 from sqlmodel import SQLModel
 from typing import Optional
 from uuid import UUID
@@ -12,20 +13,20 @@ class UserBase(SQLModel):
     ----------
     provider : Provider
         Authentication provider of the user.
-    provider_email : str | None
+    email: Optional[str]
         Email address from the user's provider.
     provider_id : str
-        Unique identifier from user's provider.
-    provider_image : str | None
-        Profile image URL from user's provider.
-    provider_name : str | None
-        Name from user's provider.
+        Unique identifier from the user's provider.
+    image : Optional[str]
+        Profile image URL from the user's provider.
+    name : Optional[str]
+        Username from the user's provider.
     """
     provider: Provider
-    provider_email: Optional[str]
+    email: Optional[str]
     provider_id: str
-    provider_image: Optional[str]
-    provider_name: Optional[str]
+    image: Optional[str]
+    name: Optional[str]
 
 
 class UserCreate(UserBase):
@@ -41,5 +42,11 @@ class UserRead(UserBase):
     ----------
     id: UUID
         Unique identifier of the user.
+    created_at : datetime
+        Timestamp when the user was created.
+    updated_at : datetime
+        Timestamp when the user was last updated.
     """
     id: UUID
+    created_at: datetime
+    updated_at: datetime

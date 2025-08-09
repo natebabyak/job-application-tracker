@@ -1,15 +1,15 @@
-from app.models.user import User
-from app.schemas.user import UserCreate
+from models.user import User
+from schemas.user import UserCreate
 from fastapi import HTTPException
 from sqlmodel import select, Session
 from uuid import UUID
 
 
-def create_user(user: UserCreate, session: Session) -> User:
+def create_user(user_create: UserCreate, session: Session) -> User:
     existing_user = session.exec(
         select(User).where(
-            User.provider == user.provider,
-            User.provider_id == user.provider_id
+            User.provider == user_create.provider,
+            User.provider_id == user_create.provider_id
         )
     ).first()
 
@@ -17,11 +17,11 @@ def create_user(user: UserCreate, session: Session) -> User:
         return existing_user
 
     new_user = User(
-        provider=user.provider,
-        provider_email=user.provider_email,
-        provider_id=user.provider_id,
-        provider_image=user.provider_image,
-        provider_name=user.provider_name
+        provider=user_create.provider,
+        email=user_create.email,
+        provider_id=user_create.provider_id,
+        image=user_create.image,
+        name=user_create.name
     )
 
     session.add(new_user)
