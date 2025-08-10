@@ -1,14 +1,21 @@
-from typing import Annotated
+from dotenv import load_dotenv
+from os import getenv
+from sqlmodel import create_engine, Session, SQLModel
 
-from fastapi import Header, HTTPException
+load_dotenv()
+
+DATABASE_URL = getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL environment variable failed to load")
+
+engine = create_engine(DATABASE_URL, echo=True)
 
 
-async def get_token_header(x_token: Annotated[str, Header()]):
-    if x_token != "fake-super-secret-token":
-        raise HTTPException(status_code=400, detail="X-Token header invalid")
+def create_db_and_tables() -> None:
+    SQLModel.metadata.create_all(engine)
 
 
-async def get_query_token(token: str):
-    if token != "jessica":
-        raise HTTPException(
-            status_code=400, detail="No Jessica token provided")
+def get_session():
+    with Session(engine) as session:
+        yield session

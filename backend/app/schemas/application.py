@@ -53,3 +53,8 @@ class ApplicationRead(ApplicationBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
+
+
+class ApplicationUpdate(ApplicationBase):
+    """Schema for updating an application."""
+    pass

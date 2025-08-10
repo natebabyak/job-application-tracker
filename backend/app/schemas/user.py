@@ -50,3 +50,8 @@ class UserRead(UserBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
+
+
+class UserUpdate(UserBase):
+    """Schema for updating a user."""
+    pass
