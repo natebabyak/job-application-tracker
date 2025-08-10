@@ -1,6 +1,9 @@
 # Visual Studio Code
 .vscode
 
+# Shared .env
+.env
+
 # Backend
 /backend/app/__pycache__
 /backend/venv

@@ -1,4 +1,4 @@
 fastapi
-pyjwt
+fastapi-nextauth-jwt
 sqlmodel
 uvicorn

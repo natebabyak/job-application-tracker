@@ -35,8 +35,7 @@ def read_user(
     user_id: UUID,
     session: Annotated[Session, Depends(get_session)]
 ) -> User:
-    """
-    Reads a user by their ID.
+    """Reads a user by their ID.
 
     Parameters
     ----------

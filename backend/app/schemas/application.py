@@ -5,8 +5,7 @@ from uuid import UUID
 
 
 class ApplicationBase(SQLModel):
-    """
-    Base schema for an application.
+    """Base schema for an application.
 
     Attributes
     ----------
@@ -26,8 +25,7 @@ class ApplicationBase(SQLModel):
 
 
 class ApplicationCreate(ApplicationBase):
-    """
-    Schema for creating an application.
+    """Schema for creating an application.
 
     Attributes
     ----------
@@ -38,8 +36,7 @@ class ApplicationCreate(ApplicationBase):
 
 
 class ApplicationRead(ApplicationBase):
-    """
-    Schema for reading an application.
+    """Schema for reading an application.
 
     Attributes
     ----------
@@ -56,5 +53,11 @@ class ApplicationRead(ApplicationBase):
 
 
 class ApplicationUpdate(ApplicationBase):
-    """Schema for updating an application."""
-    pass
+    """Schema for updating an application.
+
+    Attributes
+    ----------
+    id: UUID
+        Unique identifier of the application.
+    """
+    id: UUID

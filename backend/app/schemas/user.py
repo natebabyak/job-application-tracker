@@ -6,8 +6,7 @@ from uuid import UUID
 
 
 class UserBase(SQLModel):
-    """
-    Base schema for a user.
+    """Base schema for a user.
 
     Attributes
     ----------
@@ -35,12 +34,11 @@ class UserCreate(UserBase):
 
 
 class UserRead(UserBase):
-    """
-    Schema for reading a user.
+    """Schema for reading a user.
 
     Attributes
     ----------
-    id: UUID
+    id : UUID
         Unique identifier of the user.
     created_at : datetime
         Timestamp when the user was created.
@@ -53,5 +51,11 @@ class UserRead(UserBase):
 
 
 class UserUpdate(UserBase):
-    """Schema for updating a user."""
-    pass
+    """Schema for updating a user.
+
+    Attributes
+    ----------
+    id : UUID
+        Unique identifier of the user.
+    """
+    id: UUID

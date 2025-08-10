@@ -16,8 +16,7 @@ class Status(str, Enum):
 
 
 class Application(SQLModel, table=True):
-    """
-    Model for storing an application.
+    """Model for storing an application.
 
     Attributes
     ----------

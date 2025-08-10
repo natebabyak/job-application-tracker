@@ -15,8 +15,7 @@ class Provider(str, Enum):
 
 
 class User(SQLModel, table=True):
-    """
-    Model for storing a user.
+    """Model for storing a user.
 
     Attributes
     ----------
