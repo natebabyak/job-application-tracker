@@ -1,15 +1,14 @@
 from models.application import Application
 from schemas.application import ApplicationCreate, ApplicationRead, ApplicationUpdate
-from fastapi import Depends, HTTPException, status
+from fastapi import HTTPException, status
 from sqlmodel import Session
-from typing import Annotated, List
-from dependencies import get_session
+from typing import List
 from uuid import UUID
 
 
 def create_application(
     application_create: ApplicationCreate,
-    session: Annotated[Session, Depends(get_session)]
+    session: Session
 ) -> Application:
     """Creates an application.
 
@@ -30,7 +29,7 @@ def create_application(
 
 def create_applications(
     applications_create: List[ApplicationCreate],
-    session: Annotated[Session, Depends(get_session)]
+    session: Session
 ) -> List[Application]:
     """Creates multiple applications.
 
@@ -51,9 +50,9 @@ def create_applications(
 
 def read_application(
     application_id: UUID,
-    session: Annotated[Session, Depends(get_session)]
+    session: Session
 ) -> ApplicationRead:
-    """Reads an application by its ID.
+    """Reads an application.
 
     Parameters
     ----------
@@ -72,26 +71,36 @@ def read_application(
 
 def read_applications(
     user_id: UUID,
-    session: Annotated[Session, Depends(get_session)]
+    session: Session
 ) -> List[Application]:
-    """"""
+    """Reads a user's applications.
+
+    Parameters
+    ----------
+    user_id : UUID
+        Unique identifier of the user whose applications to read.
+    session : Session
+        Database session.
+    """
     raise NotImplementedError()
 
 
 def update_application(
     application_update: ApplicationUpdate,
-    session: Annotated[Session, Depends(get_session)]
+    session: Session
 ) -> Application:
     """Updates an application.
+
+
     """
     raise NotImplementedError()
 
 
 def delete_application(
     application_id: UUID,
-    session: Annotated[Session, Depends(get_session)]
+    session: Session
 ) -> None:
-    """Deletes an application by its ID.
+    """Deletes an application.
 
     Parameters
     ----------
@@ -115,3 +124,13 @@ def delete_application(
 
     session.delete(application_to_delete)
     session.commit()
+
+
+def delete_applications(
+    user_id: UUID,
+    session: Session
+) -> None:
+    """Deletes all of a user's applications.
+
+    """
+    raise NotImplementedError()
