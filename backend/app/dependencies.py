@@ -1,6 +1,5 @@
 from dotenv import load_dotenv
 from fastapi_nextauth_jwt import NextAuthJWT  # type: ignore
-from fastapi.security import OAuth2PasswordBearer
 import os
 from sqlmodel import create_engine, Session, SQLModel
 from typing import Generator
@@ -33,17 +32,3 @@ def get_session() -> Generator[Session, None, None]:
 
 
 JWT = NextAuthJWT()
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-
-def get_current_user(token: str = Depends(oauth2_scheme)):
-    try:
-        payload = JWT.verify(token)  # decode & verify JWT
-    except Exception:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return payload
