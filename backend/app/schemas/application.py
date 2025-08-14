@@ -29,10 +29,10 @@ class ApplicationCreate(ApplicationBase):
 
     Attributes
     ----------
-    owner_id : UUID
+    owner_id : str
         Unique identifier of the user who owns the application.
     """
-    owner_id: UUID
+    owner_id: str
 
 
 class ApplicationRead(ApplicationBase):
@@ -53,11 +53,5 @@ class ApplicationRead(ApplicationBase):
 
 
 class ApplicationUpdate(ApplicationBase):
-    """Schema for updating an application.
-
-    Attributes
-    ----------
-    id: UUID
-        Unique identifier of the application.
-    """
-    id: UUID
+    """Schema for updating an application."""
+    pass

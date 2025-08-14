@@ -1,9 +1,9 @@
 from datetime import datetime, timezone
-from sqlmodel import Field, Relationship, SQLModel, TIMESTAMP
+from sqlmodel import Field, Relationship, SQLModel
 from typing import List, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from app.models.application import Application
+    from models.application import Application
 
 
 class User(SQLModel, table=True):
@@ -18,7 +18,7 @@ class User(SQLModel, table=True):
     image : str, optional
         Profile image URL of the user.
     name : str, optional
-        Username of the user.
+        Display name of the user.
     created_at : datetime
         Timestamp when the user was created.
     updated_at : datetime
@@ -26,6 +26,8 @@ class User(SQLModel, table=True):
     applications : List[Application]
         List of applications belonging to the user.
     """
+    __tablename__ = "users"  # type: ignore
+
     id: str = Field(primary_key=True)
     email: Optional[str]
     image: Optional[str]
@@ -38,4 +40,7 @@ class User(SQLModel, table=True):
         sa_column_kwargs={"onupdate": lambda: datetime.now(timezone.utc)}
     )
 
-    applications: List["Application"] = Relationship(back_populates="owner")
+    applications: List["Application"] = Relationship(
+        back_populates="owner",
+        cascade_delete=True
+    )
