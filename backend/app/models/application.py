@@ -46,7 +46,7 @@ class Application(SQLModel, table=True):
     company: str
     date: date
     status: Status
-    owner_id: str = Field(foreign_key="user.id", index=True)
+    user_id: str = Field(foreign_key="user.id", index=True)
 
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc))
@@ -55,4 +55,4 @@ class Application(SQLModel, table=True):
         sa_column_kwargs={"onupdate": lambda: datetime.now(timezone.utc)}
     )
 
-    owner: User = Relationship(back_populates="applications")
+    user: User = Relationship(back_populates="applications")

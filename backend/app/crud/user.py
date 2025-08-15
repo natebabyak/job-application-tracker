@@ -9,18 +9,26 @@ from uuid import UUID
 
 def create_user(
     user_create: UserCreate,
-    session: Annotated[Session, Depends(get_session)]
+    session: Session
 ) -> User:
-    """Creates a user."""
-    existing_user = session.exec(
-        select(User).where(
-            (User.provider == user_create.provider) &
-            (User.provider_id == user_create.provider_id)
-        )
-    ).first()
+    """Creates a user.
 
-    if existing_user:
-        return existing_user
+    Parameters
+    ----------
+    user_create : UserCreate
+        Schema for creating a user.
+    session : Session
+        Database session.
+
+    Returns
+    -------
+    User
+        Created user.
+    """
+    user = session.exec(select(User).where(User.id == user_create.id)).first()
+
+    if user is not None:
+        return user
 
     new_user = User(**user_create.model_dump())
 
@@ -33,7 +41,7 @@ def create_user(
 
 def read_user(
     user_id: UUID,
-    session: Annotated[Session, Depends(get_session)]
+    session: Session
 ) -> User:
     """Reads a user by their ID.
 
@@ -59,7 +67,7 @@ def read_user(
 
 def update_user(
     user_update: UserUpdate,
-    session: Annotated[Session, Depends(get_session)]
+    session: Session
 ) -> User:
     """Updates a user."""
     raise NotImplementedError()
@@ -67,7 +75,7 @@ def update_user(
 
 def delete_user(
     user_id: UUID,
-    session: Annotated[Session, Depends(get_session)]
+    session: Session
 ) -> None:
     """
     Deletes a user by their ID.

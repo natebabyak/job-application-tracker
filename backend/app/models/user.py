@@ -3,7 +3,7 @@ from sqlmodel import Field, Relationship, SQLModel
 from typing import List, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from models.application import Application
+    from .application import Application
 
 
 class User(SQLModel, table=True):
@@ -11,14 +11,14 @@ class User(SQLModel, table=True):
 
     Attributes
     ----------
-    id : str
+    id : int
         Unique identifier of the user.
-    email : str, optional
+    email_address : str, optional
         Email address of the user.
-    image : str, optional
-        Profile image URL of the user.
-    name : str, optional
-        Display name of the user.
+    profile_picture_url : str, optional
+        Profile picture URL of the user.
+    username : str, optional
+        Username of the user.
     created_at : datetime
         Timestamp when the user was created.
     updated_at : datetime
@@ -26,21 +26,19 @@ class User(SQLModel, table=True):
     applications : List[Application]
         List of applications belonging to the user.
     """
-    __tablename__ = "users"  # type: ignore
-
-    id: str = Field(primary_key=True)
-    email: Optional[str]
-    image: Optional[str]
-    name: Optional[str]
+    id: int = Field(primary_key=True)
+    email_address: Optional[str]
+    profile_picture_url: Optional[str]
+    username: Optional[str]
 
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc),
-        sa_column_kwargs={"onupdate": lambda: datetime.now(timezone.utc)}
+        sa_column_kwargs={"onupdate": lambda: datetime.now(timezone.utc)},
     )
 
     applications: List["Application"] = Relationship(
-        back_populates="owner",
+        back_populates="user",
         cascade_delete=True
     )
