@@ -4,11 +4,21 @@ from typing import Optional
 
 
 class UserBase(SQLModel):
-    """Base schema for a user."""
+    """Base schema for a user.
+
+    id : int
+        Unique identifier of the user.
+    email_address : str, optional
+        Email address of the user.
+    profile_picture_url : str, optional
+        Profile picture URL of the user.
+    username : str, optional
+        Username of the user.
+    """
     id: int
-    email: Optional[str]
-    image: Optional[str]
-    name: Optional[str]
+    email_address: Optional[str]
+    profile_picture_url: Optional[str]
+    username: Optional[str]
 
 
 class UserCreate(UserBase):

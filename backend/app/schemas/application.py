@@ -9,18 +9,18 @@ class ApplicationBase(SQLModel):
 
     Attributes
     ----------
-    position : str
+    position_title : str
         Title of the position applied for.
-    company : str
+    company_name : str
         Name of the company applied to.
-    date : date
+    date_submitted : date
         Date the application was submitted.
     status : Status
         Current status of the application.
     """
-    position: str
-    company: str
-    date: date
+    position_title: str
+    company_name: str
+    date_submitted: date
     status: Status
 
 
@@ -29,10 +29,10 @@ class ApplicationCreate(ApplicationBase):
 
     Attributes
     ----------
-    owner_id : str
+    user_id : str
         Unique identifier of the user who owns the application.
     """
-    owner_id: str
+    user_id: str
 
 
 class ApplicationRead(ApplicationBase):

@@ -26,6 +26,8 @@ class User(SQLModel, table=True):
     applications : List[Application]
         List of applications belonging to the user.
     """
+    __tablename__ = "users"  # type: ignore
+
     id: int = Field(primary_key=True)
     email_address: Optional[str]
     profile_picture_url: Optional[str]
