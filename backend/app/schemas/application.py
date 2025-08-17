@@ -29,10 +29,10 @@ class ApplicationCreate(ApplicationBase):
 
     Attributes
     ----------
-    user_id : str
+    user_id : int
         Unique identifier of the user who owns the application.
     """
-    user_id: str
+    user_id: int
 
 
 class ApplicationRead(ApplicationBase):
@@ -40,7 +40,7 @@ class ApplicationRead(ApplicationBase):
 
     Attributes
     ----------
-    id: UUID
+    id : UUID
         Unique identifier of the application.
     created_at: datetime
         Timestamp when the application was created.
@@ -53,5 +53,11 @@ class ApplicationRead(ApplicationBase):
 
 
 class ApplicationUpdate(ApplicationBase):
-    """Schema for updating an application."""
-    pass
+    """Schema for updating an application.
+
+    Attributes
+    ----------
+    id : UUID
+        Unique identifier of the application.
+    """
+    id: UUID

@@ -1,8 +1,7 @@
-from fastapi import HTTPException
-from models.user import User
-from schemas.user import UserCreate, UserUpdate
+from app.models.user import User
+from app.schemas.user import UserCreate, UserUpdate
+from fastapi import HTTPException, status
 from sqlmodel import Session
-from uuid import UUID
 
 
 def create_user(
@@ -23,21 +22,22 @@ def create_user(
     User
         Created user.
     """
-    user = session.get(User, user_create.id)
+    existing_user = session.get(User, user_create.id)
 
-    if user is not None:
-        return user
+    if existing_user is not None:
+        return existing_user
 
     new_user = User(**user_create.model_dump())
 
     session.add(new_user)
     session.commit()
+    session.refresh(new_user)
 
     return new_user
 
 
 def read_user(
-    user_id: UUID,
+    user_id: int,
     session: Session
 ) -> User:
     """Reads a user.
@@ -62,7 +62,10 @@ def read_user(
     user = session.get(User, user_id)
 
     if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with ID '{user_id}' not found."
+        )
 
     return user
 
@@ -93,25 +96,29 @@ def update_user(
     user = session.get(User, user_update.id)
 
     if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with ID '{user_update.id}' not found."
+        )
 
     user = User(**user_update.model_dump())
 
     session.add(user)
     session.commit()
+    session.refresh(user)
 
     return user
 
 
 def delete_user(
-    user_id: UUID,
+    user_id: int,
     session: Session
 ) -> None:
     """Deletes a user.
 
     Parameters
     ----------
-    user_id : UUID
+    user_id : int
         Unique identifier of the user to delete.
     session : Session
         Database session.
@@ -124,7 +131,10 @@ def delete_user(
     user = session.get(User, user_id)
 
     if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with ID '{user_id}' not found."
+        )
 
     session.delete(user)
     session.commit()

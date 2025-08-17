@@ -1,7 +1,7 @@
+from app.dependencies import create_tables
+from app.routers import applications, users
 from contextlib import asynccontextmanager
-from .dependencies import create_tables
 from fastapi import FastAPI
-from .routers import applications, users
 
 
 @asynccontextmanager

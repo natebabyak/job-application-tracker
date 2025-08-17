@@ -1,6 +1,6 @@
+from app.models.user import User
 from datetime import date, datetime, timezone
 from enum import Enum
-from models.user import User
 from sqlmodel import Field, Relationship, SQLModel
 from uuid import UUID, uuid4
 
@@ -30,7 +30,7 @@ class Application(SQLModel, table=True):
         Date the application was submitted.
     status : Status
         Current status of the application.
-    user_id : str
+    user_id : int
         Unique identifier of the user who owns the application.
     created_at : datetime
         Timestamp when the application was created.
@@ -39,14 +39,12 @@ class Application(SQLModel, table=True):
     user : User
         User who owns the application.
     """
-    __tablename__ = "applications"  # type: ignore
-
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     position_title: str
     company_name: str
     date_submitted: date
     status: Status
-    user_id: str = Field(foreign_key="user.id", index=True)
+    user_id: int = Field(foreign_key="user.id", index=True)
 
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc))

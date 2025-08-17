@@ -3,7 +3,7 @@ from sqlmodel import Field, Relationship, SQLModel
 from typing import List, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .application import Application
+    from app.models.application import Application
 
 
 class User(SQLModel, table=True):
@@ -26,8 +26,6 @@ class User(SQLModel, table=True):
     applications : List[Application]
         List of applications belonging to the user.
     """
-    __tablename__ = "users"  # type: ignore
-
     id: int = Field(primary_key=True)
     email_address: Optional[str]
     profile_picture_url: Optional[str]

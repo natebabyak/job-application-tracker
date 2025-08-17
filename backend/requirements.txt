@@ -1,4 +1,5 @@
 fastapi
 fastapi-nextauth-jwt
+psycopg2
 sqlmodel
 uvicorn
