@@ -10,7 +10,13 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    title="Apt",
+    lifespan=lifespan,
+    license_info={
+        "name": "MIT"
+    }
+)
 
 app.include_router(applications.router)
 app.include_router(users.router)

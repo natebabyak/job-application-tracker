@@ -8,6 +8,7 @@ from uuid import UUID
 
 def create_application(
     application_create: ApplicationCreate,
+    user_id: int,
     session: Session
 ) -> Application:
     """Creates an application.
@@ -16,6 +17,8 @@ def create_application(
     ----------
     application_create : ApplicationCreate
         Schema for creating an application.
+    user_id : int
+        Unique identifier of the user who owns the application.
     session : Session
         Database session.
 
@@ -24,7 +27,10 @@ def create_application(
     Application
         Created application.
     """
-    new_application = Application(**application_create.model_dump())
+    new_application = Application(
+        **application_create.model_dump(),
+        user_id=user_id
+    )
 
     session.add(new_application)
     session.commit()
@@ -35,6 +41,7 @@ def create_application(
 
 def create_applications(
     applications_create: List[ApplicationCreate],
+    user_id: int,
     session: Session
 ) -> List[Application]:
     """Creates multiple applications.
@@ -43,6 +50,8 @@ def create_applications(
     ----------
     applications_create : List[ApplicationCreate]
         List of schemas for creating an application.
+    user_id : int
+        Unique identifier of the user who owns the applications.
     session : Session
         Database session.
 
@@ -52,7 +61,10 @@ def create_applications(
         Created applications.
     """
     new_applications = [
-        Application(**application_create.model_dump())
+        Application(
+            **application_create.model_dump(),
+            user_id=user_id
+        )
         for application_create in applications_create
     ]
 
@@ -123,6 +135,7 @@ def read_applications(
 
 
 def update_application(
+    application_id: UUID,
     application_update: ApplicationUpdate,
     session: Session
 ) -> Application:
@@ -130,6 +143,8 @@ def update_application(
 
     Parameters
     ----------
+    application_id : UUID
+        Unique identifier of the application.
     application_update : ApplicationUpdate
         Schema for updating an application.
     session : Session
@@ -145,12 +160,12 @@ def update_application(
     HTTPException
         If the application is not found.
     """
-    application = session.get(Application, application_update.id)
+    application = session.get(Application, application_id)
 
     if application is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Application with ID '{application_update.id}' not found."
+            detail=f"Application with ID '{application_id}' not found."
         )
 
     application = Application(**application_update.model_dump())

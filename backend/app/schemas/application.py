@@ -1,6 +1,6 @@
 from app.models.application import Status
 from datetime import date, datetime
-from sqlmodel import SQLModel
+from sqlmodel import Field, SQLModel
 from uuid import UUID
 
 
@@ -18,46 +18,50 @@ class ApplicationBase(SQLModel):
     status : Status
         Current status of the application.
     """
-    position_title: str
-    company_name: str
-    date_submitted: date
-    status: Status
+    position_title: str = Field(
+        title="Position Title",
+        description="Title of the position applied for."
+    )
+
+    company_name: str = Field(
+        title="Company Name",
+        description="Name of the company applied to."
+    )
+
+    date_submitted: date = Field(
+        title="Date Submitted",
+        description="Date the application was submitted."
+    )
+
+    status: Status = Field(
+        title="Status",
+        description="Current status of the application."
+    )
 
 
 class ApplicationCreate(ApplicationBase):
-    """Schema for creating an application.
-
-    Attributes
-    ----------
-    user_id : int
-        Unique identifier of the user who owns the application.
-    """
-    user_id: int
+    """Schema for creating an application."""
+    pass
 
 
 class ApplicationRead(ApplicationBase):
-    """Schema for reading an application.
+    """Schema for reading an application."""
+    id: UUID = Field(
+        title="ID",
+        description="Unique identifier of the application."
+    )
 
-    Attributes
-    ----------
-    id : UUID
-        Unique identifier of the application.
-    created_at: datetime
-        Timestamp when the application was created.
-    updated_at: datetime
-        Timestamp when the application was last updated.
-    """
-    id: UUID
-    created_at: datetime
-    updated_at: datetime
+    created_at: datetime = Field(
+        title="Created At",
+        description="Timestamp when the application was created."
+    )
+
+    updated_at: datetime = Field(
+        title="Updated At",
+        description="Timestamp when the application was last updated."
+    )
 
 
 class ApplicationUpdate(ApplicationBase):
-    """Schema for updating an application.
-
-    Attributes
-    ----------
-    id : UUID
-        Unique identifier of the application.
-    """
-    id: UUID
+    """Schema for updating an application."""
+    pass

@@ -1,7 +1,7 @@
 import app.crud.application as crud
 from app.dependencies import get_session, verify_api_key, get_current_user_id
 from app.models.application import Application
-from app.schemas.application import ApplicationBase, ApplicationCreate, ApplicationRead, ApplicationUpdate
+import app.schemas.application as schemas
 from fastapi import APIRouter, Depends, status
 from sqlmodel import Session
 from typing import Annotated, List
@@ -14,38 +14,25 @@ router = APIRouter(
 )
 
 
-@router.post("/me", response_model=ApplicationRead)
+@router.post("/me", response_model=schemas.ApplicationRead)
 async def create_application(
-    application_base: ApplicationBase,
+    application_create: schemas.ApplicationCreate,
     session: Annotated[Session, Depends(get_session)],
-    current_user_id: Annotated[int, Depends(get_current_user_id)]
+    user_id: Annotated[int, Depends(get_current_user_id)]
 ) -> Application:
-    application_create = ApplicationCreate(
-        **application_base.model_dump(),
-        user_id=current_user_id
-    )
-
-    return crud.create_application(application_create, session)
+    return crud.create_application(application_create, user_id, session)
 
 
-@router.post("/me", response_model=List[ApplicationRead])
+@router.post("/me", response_model=List[schemas.ApplicationRead])
 async def create_applications(
-    applications_base: List[ApplicationBase],
+    applications_create: List[schemas.ApplicationCreate],
     session: Annotated[Session, Depends(get_session)],
-    current_user_id: Annotated[int, Depends(get_current_user_id)]
+    user_id: Annotated[int, Depends(get_current_user_id)]
 ) -> List[Application]:
-    applications_create = [
-        ApplicationCreate(
-            **application_base.model_dump(),
-            user_id=current_user_id
-        )
-        for application_base in applications_base
-    ]
-
-    return crud.create_applications(applications_create, session)
+    return crud.create_applications(applications_create, user_id, session)
 
 
-@router.get("/{application_id}", response_model=ApplicationRead)
+@router.get("/{application_id}", response_model=schemas.ApplicationRead)
 async def read_application(
     application_id: UUID,
     session: Annotated[Session, Depends(get_session)]
@@ -53,7 +40,7 @@ async def read_application(
     return crud.read_application(application_id, session=session)
 
 
-@router.get("/{user_id}", response_model=List[ApplicationRead])
+@router.get("/{user_id}", response_model=List[schemas.ApplicationRead])
 async def read_applications(
     user_id: int,
     session: Annotated[Session, Depends(get_session)]
@@ -61,18 +48,13 @@ async def read_applications(
     return crud.read_applications(user_id, session)
 
 
-@router.put("/{application_id}", response_model=ApplicationRead)
+@router.put("/{application_id}", response_model=schemas.ApplicationRead)
 async def update_application(
-    application_base: ApplicationBase,
     application_id: UUID,
+    application_update: schemas.ApplicationUpdate,
     session: Annotated[Session, Depends(get_session)],
 ) -> Application:
-    application_update = ApplicationUpdate(
-        **application_base.model_dump(),
-        id=application_id
-    )
-
-    return crud.update_application(application_update, session=session)
+    return crud.update_application(application_id, application_update, session=session)
 
 
 @router.delete("/{application_id}", status_code=status.HTTP_204_NO_CONTENT)

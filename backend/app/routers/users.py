@@ -1,7 +1,7 @@
 import app.crud.user as crud
 from app.dependencies import get_session, verify_api_key
 from app.models.user import User
-from app.schemas.user import UserCreate, UserRead, UserUpdate
+import app.schemas.user as schemas
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
 from typing import Annotated
@@ -14,15 +14,15 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=UserRead)
+@router.post("/", response_model=schemas.UserRead)
 async def create_user(
-    user_create: UserCreate,
+    user_create: schemas.UserCreate,
     session: Annotated[Session, Depends(get_session)]
 ) -> User:
     return crud.create_user(user_create, session)
 
 
-@router.get("/{user_id}", response_model=UserRead)
+@router.get("/{user_id}", response_model=schemas.UserRead)
 async def read_user(
     user_id: int,
     session: Annotated[Session, Depends(get_session)]
@@ -30,9 +30,9 @@ async def read_user(
     return crud.read_user(user_id, session)
 
 
-@router.put("/", response_model=UserRead)
+@router.put("/", response_model=schemas.UserRead)
 async def update_user(
-    user_update: UserUpdate,
+    user_update: schemas.UserUpdate,
     session: Annotated[Session, Depends(get_session)]
 ) -> User:
     return crud.update_user(user_update, session)
