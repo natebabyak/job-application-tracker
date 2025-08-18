@@ -14,10 +14,10 @@ const handler = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.email = user.email;
-        token.name = user.name;
-        token.picture = user.image;
         token.sub = user.id;
+        token.email = user.email;
+        token.picture = user.image;
+        token.name = user.name;
       }
       return token;
     },
