@@ -6,7 +6,7 @@ from uuid import UUID, uuid4
 
 
 class Status(str, Enum):
-    """Represents the status of an application."""
+    """Status of an application."""
     ACCEPTED = "accepted"
     DECLINED = "declined"
     INTERVIEWING = "interviewing"
@@ -16,41 +16,54 @@ class Status(str, Enum):
 
 
 class Application(SQLModel, table=True):
-    """Model for storing an application.
+    """Model for storing an application."""
+    __tablename__ = "applications"  # type: ignore
 
-    Attributes
-    ----------
-    id : UUID
-        Unique identifier of the application.
-    position_title : str
-        Title of the position applied for.
-    company_name : str
-        Name of the company applied to.
-    date_submitted : date
-        Date the application was submitted.
-    status : Status
-        Current status of the application.
-    user_id : int
-        Unique identifier of the user who owns the application.
-    created_at : datetime
-        Timestamp when the application was created.
-    updated_at : datetime
-        Timestamp when the application was last updated.
-    user : User
-        User who owns the application.
-    """
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
-    position_title: str
-    company_name: str
-    date_submitted: date
-    status: Status
-    user_id: int = Field(foreign_key="user.id", index=True)
-
-    created_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
-        sa_column_kwargs={"onupdate": lambda: datetime.now(timezone.utc)}
+    id: UUID = Field(
+        default_factory=uuid4,
+        title="ID",
+        description="Unique identifier of the application.",
+        primary_key=True
     )
 
-    user: User = Relationship(back_populates="applications")
+    position: str = Field(
+        title="Position",
+        description="Title of the position applied for."
+    )
+
+    company: str = Field(
+        title="Company",
+        description="Name of the company applied to."
+    )
+
+    submitted_on: date = Field(
+        title="Submitted On",
+        description="Date the application was submitted."
+    )
+
+    status: Status = Field(
+        title="Status",
+        description="Current status of the application."
+    )
+
+    owner_id: int = Field(
+        title="Owner ID",
+        description="Unique identifier of the application's owner.",
+        foreign_key="users.id",
+        index=True
+    )
+
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        title="Created At",
+        description="Timestamp when the application was created."
+    )
+
+    updated_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        title="Updated At",
+        description="Timestamp when the application was last updated.",
+        sa_column_kwargs={"onupdate": lambda: datetime.now(timezone.utc)},
+    )
+
+    owner: User = Relationship(back_populates="applications")

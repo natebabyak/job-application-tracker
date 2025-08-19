@@ -1,44 +1,48 @@
 from datetime import datetime, timezone
+from enum import Enum
 from sqlmodel import Field, Relationship, SQLModel
-from typing import List, Optional, TYPE_CHECKING
+from typing import List, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.models.application import Application
 
 
-class User(SQLModel, table=True):
-    """Model for storing a user.
+class Theme(str, Enum):
+    DARK = "dark"
+    LIGHT = "light"
+    SYSTEM = "system"
 
-    Attributes
-    ----------
-    id : int
-        Unique identifier of the user.
-    email_address : str, optional
-        Email address of the user.
-    profile_picture_url : str, optional
-        Profile picture URL of the user.
-    username : str, optional
-        Username of the user.
-    created_at : datetime
-        Timestamp when the user was created.
-    updated_at : datetime
-        Timestamp when the user was last updated.
-    applications : List[Application]
-        List of applications belonging to the user.
-    """
-    id: int = Field(primary_key=True)
-    email_address: Optional[str]
-    profile_picture_url: Optional[str]
-    username: Optional[str]
+
+class User(SQLModel, table=True):
+    """Model for storing a user."""
+    __tablename__ = "users"  # type: ignore
+
+    id: int = Field(
+        title="ID",
+        description="Unique identifier of the user.",
+        primary_key=True
+    )
+
+    theme: Theme = Field(
+        default=Theme.SYSTEM,
+        title="Theme",
+        description=""
+    )
 
     created_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc))
+        default_factory=lambda: datetime.now(timezone.utc),
+        title="Created At",
+        description="Timestamp when the user was created."
+    )
+
     updated_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc),
+        title="Updated At",
+        description="Timestamp when the user was last updated.",
         sa_column_kwargs={"onupdate": lambda: datetime.now(timezone.utc)},
     )
 
-    applications: List["Application"] = Relationship(
-        back_populates="user",
+    applications: List[Application] = Relationship(
+        back_populates="owner",
         cascade_delete=True
     )
