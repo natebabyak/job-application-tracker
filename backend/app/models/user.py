@@ -8,6 +8,7 @@ if TYPE_CHECKING:
 
 
 class Theme(str, Enum):
+    """Theme of a user."""
     DARK = "dark"
     LIGHT = "light"
     SYSTEM = "system"
@@ -26,7 +27,7 @@ class User(SQLModel, table=True):
     theme: Theme = Field(
         default=Theme.SYSTEM,
         title="Theme",
-        description=""
+        description="Preferred theme of the user."
     )
 
     created_at: datetime = Field(

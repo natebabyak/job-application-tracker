@@ -2,16 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  CalendarIcon,
-  CheckIcon,
-  GhostIcon,
-  HandshakeIcon,
-  LogOutIcon,
-  MicIcon,
-  SendIcon,
-  XIcon,
-} from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -35,56 +26,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
-
-import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { Application, applicationSchema } from "./columns";
 import { cn } from "@/lib/utils";
 
-const items = [
-  {
-    title: "Applied",
-    value: "applied",
-    icon: SendIcon,
-  },
-  {
-    title: "Interviewing",
-    value: "interviewing",
-    icon: MicIcon,
-  },
-  {
-    title: "Offered",
-    value: "offered",
-    icon: HandshakeIcon,
-  },
-  {
-    title: "Accepted",
-    value: "accepted",
-    icon: CheckIcon,
-  },
-  {
-    title: "Withdrawn",
-    value: "withdrawn",
-    icon: LogOutIcon,
-  },
-  {
-    title: "Rejected",
-    value: "rejected",
-    icon: XIcon,
-  },
-  {
-    title: "Ghosted",
-    value: "ghosted",
-    icon: GhostIcon,
-  },
-];
-
-export function DashboardForm() {
+export default function AddApplicationForm() {
   const form = useForm<z.infer<typeof applicationSchema>>({
     resolver: zodResolver(applicationSchema),
     defaultValues: {
       date: new Date(),
-      status: "applied",
+      status: "submitted",
     },
   });
 

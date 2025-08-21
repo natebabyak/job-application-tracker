@@ -8,9 +8,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { DashboardForm } from "./form";
+import { DashboardForm } from "./add-application-form";
 
-export function DashboardDialog() {
+export default function AddApplicationDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>

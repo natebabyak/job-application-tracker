@@ -6,15 +6,14 @@ import { z } from "zod";
 export const applicationSchema = z.object({
   position: z.string(),
   company: z.string(),
-  date: z.date(),
+  submittedOn: z.date(),
   status: z.enum([
     "accepted",
-    "applied",
-    "ghosted",
+    "declined",
     "interviewing",
     "offered",
     "rejected",
-    "withdrawn",
+    "submitted",
   ]),
 });
 
@@ -23,15 +22,15 @@ export type Application = z.infer<typeof applicationSchema>;
 export const columns: ColumnDef<Application>[] = [
   {
     accessorKey: "position",
-    header: "Position Title",
+    header: "Position",
   },
   {
     accessorKey: "company",
-    header: "Company Name",
+    header: "Company",
   },
   {
-    accessorKey: "date",
-    header: "Application Date",
+    accessorKey: "submittedOn",
+    header: "Submitted On",
   },
   {
     accessorKey: "status",
