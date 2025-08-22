@@ -5,7 +5,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { DashboardSidebar } from "./sidebar";
+import { DashboardSidebar } from "../../components/dashboard/sidebar";
 import { useSession } from "next-auth/react";
 import { redirect, RedirectType } from "next/navigation";
 

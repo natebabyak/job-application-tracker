@@ -29,7 +29,7 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Application, applicationSchema } from "./columns";
+import { Application, applicationSchema } from "../../app/dashboard/columns";
 import { cn } from "@/lib/utils";
 
 export default function AddApplicationForm() {
