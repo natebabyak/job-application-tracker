@@ -1,7 +1,7 @@
 <div align="center">
     <img src="./frontend/public/apt.svg" alt="Apt" width="80px" />
     <h1>Apt</h1>
-    <h3>Track and optimize your job search from a single, intuitive dashboard</h3>
+    <h3>Track and optimize your job search from a single, powerful dashboard</h3>
 </div>
 
 ## Built With
@@ -21,7 +21,14 @@
 
 ## Roadmap
 
-- [ ] Release
+- [ ] Landing Page
+- [ ] Dashboard
+    - [ ] Sidebar
+    - [ ] Charts
+    - [ ] Table
+- [ ] Mobile Support
+- [ ] Auto Tagging
+- [ ] Auto Fill
 
 ## License
 
