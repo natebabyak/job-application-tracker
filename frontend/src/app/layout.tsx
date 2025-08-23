@@ -1,26 +1,19 @@
+import { getSession } from "@/auth";
 import "./globals.css";
-import SessionProvider from "@/components/session-provider";
-import { ThemeProvider } from "@/components/theme-provider";
+import { Providers } from "@/components/providers/providers";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getSession();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
       <body>
-        <SessionProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
-        </SessionProvider>
+        <Providers session={session}>{children}</Providers>
       </body>
     </html>
   );

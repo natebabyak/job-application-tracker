@@ -3,11 +3,11 @@
 import type { Session } from "next-auth";
 import { SessionProvider as NextAuthSessionProvider } from "next-auth/react";
 
-export default function SessionProvider({
+export function SessionProvider({
   session,
   children,
 }: {
-  session?: Session | null;
+  session: Session | null;
   children: React.ReactNode;
 }) {
   return (

@@ -29,15 +29,14 @@ export const applicationStatuses = [
 
 export type ApplicationStatus = (typeof applicationStatuses)[number];
 
-export const applicationSchema = z.object({
-  id: z.uuid(),
+export const ApplicationSchema = z.object({
   position: z.string(),
   company: z.string(),
   submittedOn: z.date(),
   status: z.enum(applicationStatuses),
 });
 
-export type Application = z.infer<typeof applicationSchema>;
+export type Application = z.infer<typeof ApplicationSchema>;
 
 export const columns: ColumnDef<Application>[] = [
   {

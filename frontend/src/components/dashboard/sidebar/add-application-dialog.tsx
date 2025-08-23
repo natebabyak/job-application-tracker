@@ -1,7 +1,6 @@
 import {
   Application,
-  applicationSchema,
-  ApplicationStatus,
+  ApplicationSchema,
   applicationStatuses,
 } from "@/app/dashboard/columns";
 import { Button } from "@/components/ui/button";
@@ -34,26 +33,24 @@ import * as React from "react";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export function AddApplicationDialog() {
-  const [submittedOn, setSubmittedOn] = React.useState<Date | undefined>(
-    new Date()
-  );
-  const [status, setStatus] = React.useState<ApplicationStatus>("submitted");
-
-  const form = useForm<z.infer<typeof applicationSchema>>({
-    resolver: zodResolver(applicationSchema),
+  const form = useForm<z.infer<typeof ApplicationSchema>>({
+    resolver: zodResolver(ApplicationSchema),
     defaultValues: {
-      submittedOn: submittedOn,
-      status: status,
+      position: "",
+      company: "",
+      submittedOn: new Date(),
+      status: "submitted",
     },
   });
 
@@ -71,7 +68,10 @@ export function AddApplicationDialog() {
           <DialogTitle>Add application</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form
+            id="add-application-form"
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
             <div className="grid gap-4">
               <FormField
                 control={form.control}
@@ -93,7 +93,7 @@ export function AddApplicationDialog() {
                   <FormItem>
                     <FormLabel>Company</FormLabel>
                     <FormControl>
-                      <Input placeholder="Google" {...field} />
+                      <Input placeholder="Apt" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -110,24 +110,23 @@ export function AddApplicationDialog() {
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button variant="outline">
-                              {!field.value && <Skeleton />}
-                              <span>
+                              <span className="font-normal">
                                 {field.value.toLocaleDateString(undefined, {
                                   dateStyle: "medium",
                                 })}
                               </span>
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              <CalendarIcon className="ml-auto opacity-50" />
                             </Button>
                           </FormControl>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">
-                          <div className="pt-4 px-4">
-                            <Button className="w-full">Today</Button>
-                          </div>
                           <Calendar
                             mode="single"
-                            selected={submittedOn}
-                            onSelect={setSubmittedOn}
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) =>
+                              date > new Date() || date < new Date("1900-01-01")
+                            }
                             captionLayout="dropdown"
                           />
                         </PopoverContent>
@@ -142,18 +141,24 @@ export function AddApplicationDialog() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Status</FormLabel>
-                      <Select>
+                      <Select
+                        defaultValue={field.value}
+                        onValueChange={field.onChange}
+                      >
                         <FormControl>
                           <SelectTrigger className="w-full">
                             <SelectValue />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {applicationStatuses.map((status) => (
-                            <SelectItem key={status} value={status}>
-                              <span className="capitalize">{status}</span>
-                            </SelectItem>
-                          ))}
+                          <SelectGroup>
+                            <SelectLabel>Statuses</SelectLabel>
+                            {applicationStatuses.map((status) => (
+                              <SelectItem key={status} value={status}>
+                                <span className="capitalize">{status}</span>
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -168,7 +173,9 @@ export function AddApplicationDialog() {
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button type="submit">Add application</Button>
+          <Button form="add-application-form" type="submit">
+            Submit
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

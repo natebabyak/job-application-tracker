@@ -28,12 +28,16 @@ class Application(SQLModel, table=True):
 
     position: str = Field(
         title="Position",
-        description="Title of the position applied for."
+        description="Title of the position applied for.",
+        min_length=1,
+        max_length=255
     )
 
     company: str = Field(
         title="Company",
-        description="Name of the company applied to."
+        description="Name of the company applied to.",
+        min_length=1,
+        max_length=255
     )
 
     submitted_on: date = Field(
