@@ -34,7 +34,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import AddApplicationDialog from "./add-application-dialog";
+import { AddApplicationDialog } from "./add-application-dialog";
 
 export function DashboardSidebar({
   user,

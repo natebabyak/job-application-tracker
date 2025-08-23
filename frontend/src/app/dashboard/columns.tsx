@@ -1,20 +1,12 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  ChevronDownIcon,
-  ChevronsUpDownIcon,
-  ChevronUpIcon,
-  Edit2Icon,
-  EllipsisIcon,
-  Trash2Icon,
-} from "lucide-react";
+import { Edit2Icon, EllipsisIcon, EyeIcon, Trash2Icon } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -24,8 +16,9 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { z } from "zod";
+import { DashboardTableHeader } from "@/components/dashboard/table/header";
 
-const statuses = [
+export const applicationStatuses = [
   "accepted",
   "declined",
   "interviewing",
@@ -34,105 +27,42 @@ const statuses = [
   "submitted",
 ] as const;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const schema = z.object({
+export type ApplicationStatus = (typeof applicationStatuses)[number];
+
+export const applicationSchema = z.object({
   id: z.uuid(),
   position: z.string(),
   company: z.string(),
   submittedOn: z.date(),
-  status: z.enum(statuses),
+  status: z.enum(applicationStatuses),
 });
 
-type Application = z.infer<typeof schema>;
+export type Application = z.infer<typeof applicationSchema>;
 
 export const columns: ColumnDef<Application>[] = [
   {
     accessorKey: "position",
-    header: ({ column }) => {
-      const isSorted = column.getIsSorted();
-
-      return (
-        <Button
-          onClick={() => column.toggleSorting(isSorted === "asc")}
-          variant="ghost"
-        >
-          Position
-          {!isSorted ? (
-            <ChevronsUpDownIcon />
-          ) : isSorted === "asc" ? (
-            <ChevronUpIcon />
-          ) : (
-            <ChevronDownIcon />
-          )}
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <DashboardTableHeader column={column} text="Position" />
+    ),
   },
   {
     accessorKey: "company",
-    header: ({ column }) => {
-      const isSorted = column.getIsSorted();
-
-      return (
-        <Button
-          onClick={() => column.toggleSorting(isSorted === "asc")}
-          variant="ghost"
-        >
-          Company
-          {!isSorted ? (
-            <ChevronsUpDownIcon />
-          ) : isSorted === "asc" ? (
-            <ChevronUpIcon />
-          ) : (
-            <ChevronDownIcon />
-          )}
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <DashboardTableHeader column={column} text="Company" />
+    ),
   },
   {
     accessorKey: "submittedOn",
-    header: ({ column }) => {
-      const isSorted = column.getIsSorted();
-
-      return (
-        <Button
-          onClick={() => column.toggleSorting(isSorted === "asc")}
-          variant="ghost"
-        >
-          Submitted On
-          {!isSorted ? (
-            <ChevronsUpDownIcon />
-          ) : isSorted === "asc" ? (
-            <ChevronUpIcon />
-          ) : (
-            <ChevronDownIcon />
-          )}
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <DashboardTableHeader column={column} text="Submitted On" />
+    ),
   },
   {
     accessorKey: "status",
-    header: ({ column }) => {
-      const isSorted = column.getIsSorted();
-
-      return (
-        <Button
-          onClick={() => column.toggleSorting(isSorted === "asc")}
-          variant="ghost"
-        >
-          Status
-          {!isSorted ? (
-            <ChevronsUpDownIcon />
-          ) : isSorted === "asc" ? (
-            <ChevronUpIcon />
-          ) : (
-            <ChevronDownIcon />
-          )}
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <DashboardTableHeader column={column} text="Status" />
+    ),
     cell: ({ row }) => {
       const { status } = row.original;
 
@@ -152,9 +82,9 @@ export const columns: ColumnDef<Application>[] = [
             </Badge>
           </SelectTrigger>
           <SelectContent>
-            {statuses.map((s, i) => (
-              <SelectItem key={i} value={s}>
-                <span className="capitalize">{s}</span>
+            {applicationStatuses.map((status) => (
+              <SelectItem key={status} value={status}>
+                <span className="capitalize">{status}</span>
               </SelectItem>
             ))}
           </SelectContent>
@@ -164,9 +94,7 @@ export const columns: ColumnDef<Application>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const { id } = row.original;
-
+    cell: () => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -176,10 +104,11 @@ export const columns: ColumnDef<Application>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => {
-              const response = await fetch(`${}`)
-            }}>
+            <DropdownMenuItem>
+              <EyeIcon />
+              View application
+            </DropdownMenuItem>
+            <DropdownMenuItem>
               <Edit2Icon />
               Edit application
             </DropdownMenuItem>

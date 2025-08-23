@@ -7,8 +7,14 @@ if TYPE_CHECKING:
     from app.models.application import Application
 
 
+class Provider(str, Enum):
+    """Authentication provider."""
+    DISCORD = "discord"
+    GITHUB = "github"
+
+
 class Theme(str, Enum):
-    """Theme of a user."""
+    """App theme."""
     DARK = "dark"
     LIGHT = "light"
     SYSTEM = "system"
