@@ -19,12 +19,12 @@ export default function Home() {
           <h1 className="text-2xl font-bold">Apt</h1>
         </Link>
       </header>
-      <main className="grid pt-16 gap-4 justify-around">
+      <main className="grid pt-16 gap-8 justify-around">
         <h1 className="text-4xl lg:text-[4rem] font-bold text-center leading-tight max-w-6xl">
           Track and optimize your job search from a single, powerful dashboard
         </h1>
         <p className="text-lg font-medium text-center">
-          Get started now for free
+          Join now and stay on top of your job search.
         </p>
         <SignInButtons />
       </main>

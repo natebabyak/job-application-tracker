@@ -55,7 +55,7 @@ export function ApplicationsByCompanyChart({
   ];
 
   return (
-    <Card>
+    <Card className="from-primary/15 to-card bg-gradient-to-t">
       <CardHeader>
         <CardTitle>Applications by Company</CardTitle>
         <CardDescription>description</CardDescription>
