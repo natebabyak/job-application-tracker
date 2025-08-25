@@ -1,14 +1,14 @@
 from app.models.application import Application
 from app.schemas.application import ApplicationCreate, ApplicationUpdate
 from fastapi import HTTPException, status
-from sqlmodel import Session, select
+from sqlmodel import select, Session
 from typing import List
 from uuid import UUID
 
 
 def create_application(
     application_create: ApplicationCreate,
-    user_id: int,
+    owner_id: UUID,
     session: Session
 ) -> Application:
     """Creates an application.
@@ -17,8 +17,8 @@ def create_application(
     ----------
     application_create : ApplicationCreate
         Schema for creating an application.
-    user_id : int
-        Unique identifier of the user who owns the application.
+    owner_id : UUID
+        Unique identifier of the application's owner.
     session : Session
         Database session.
 
@@ -29,7 +29,7 @@ def create_application(
     """
     new_application = Application(
         **application_create.model_dump(),
-        user_id=user_id
+        owner_id=owner_id
     )
 
     session.add(new_application)
@@ -41,7 +41,7 @@ def create_application(
 
 def create_applications(
     applications_create: List[ApplicationCreate],
-    user_id: int,
+    owner_id: UUID,
     session: Session
 ) -> List[Application]:
     """Creates multiple applications.
@@ -50,8 +50,8 @@ def create_applications(
     ----------
     applications_create : List[ApplicationCreate]
         List of schemas for creating an application.
-    user_id : int
-        Unique identifier of the user who owns the applications.
+    owner_id : UUID
+        Unique identifier of the applications' owner.
     session : Session
         Database session.
 
@@ -63,7 +63,7 @@ def create_applications(
     new_applications = [
         Application(
             **application_create.model_dump(),
-            user_id=user_id
+            owner_id=owner_id
         )
         for application_create in applications_create
     ]
@@ -112,15 +112,15 @@ def read_application(
 
 
 def read_applications(
-    user_id: int,
+    owner_id: UUID,
     session: Session
 ) -> List[Application]:
     """Reads a user's applications.
 
     Parameters
     ----------
-    user_id : int
-        Unique identifier of the user whose applications to read.
+    owner_id : UUID
+        Unique identifier of the owner of the applications to read.
     session : Session
         Database session.
 
@@ -130,7 +130,7 @@ def read_applications(
         Read applications.
     """
     return list(session.exec(
-        select(Application).where(Application.user_id == user_id)
+        select(Application).where(Application.owner_id == owner_id)
     ).all())
 
 
@@ -208,20 +208,20 @@ def delete_application(
 
 
 def delete_applications(
-    user_id: int,
+    owner_id: UUID,
     session: Session
 ) -> None:
     """Deletes a user's applications.
 
     Parameters
     ----------
-    user_id : int
-        Unique identifier of the the user whose applications to delete.
+    owner_id : UUID
+        Unique identifier of the owner of the applications to delete.
     session : Session
         Database session.
     """
     applications = session.exec(
-        select(Application).where(Application.user_id == user_id)
+        select(Application).where(Application.owner_id == owner_id)
     ).all()
 
     session.delete(applications)

@@ -37,6 +37,11 @@ class User(SQLModel, table=True):
         description="Authentication provider of the user.",
     )
 
+    provider_id: int = Field(
+        title="Provider ID",
+        description="Unique identifier from the provider of the user."
+    )
+
     theme: Theme = Field(
         default=Theme.SYSTEM,
         title="Theme",
@@ -56,7 +61,7 @@ class User(SQLModel, table=True):
         sa_column_kwargs={"onupdate": lambda: datetime.now(timezone.utc)},
     )
 
-    applications: List[Application] = Relationship(
+    applications: List["Application"] = Relationship(
         back_populates="owner",
         cascade_delete=True
     )

@@ -5,31 +5,19 @@ from uuid import UUID
 
 
 class ApplicationBase(SQLModel):
-    """Base schema for an application.
-
-    Attributes
-    ----------
-    position_title : str
-        Title of the position applied for.
-    company_name : str
-        Name of the company applied to.
-    date_submitted : date
-        Date the application was submitted.
-    status : Status
-        Current status of the application.
-    """
-    position_title: str = Field(
-        title="Position Title",
+    """Base schema for an application."""
+    position: str = Field(
+        title="Position",
         description="Title of the position applied for."
     )
 
-    company_name: str = Field(
-        title="Company Name",
+    company: str = Field(
+        title="Company",
         description="Name of the company applied to."
     )
 
-    date_submitted: date = Field(
-        title="Date Submitted",
+    submitted_on: date = Field(
+        title="Submitted On",
         description="Date the application was submitted."
     )
 

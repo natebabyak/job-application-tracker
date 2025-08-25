@@ -1,30 +1,25 @@
-"use client";
-
+import { columns } from "./columns";
+import { DashboardCharts } from "@/components/dashboard/charts/charts";
+import { DashboardSidebar } from "@/components/dashboard/sidebar/sidebar";
+import { DashboardTable } from "@/components/dashboard/table/table";
+import { getServerSession } from "next-auth";
+import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { useSession } from "next-auth/react";
-import { redirect, RedirectType } from "next/navigation";
-import { DashboardCharts } from "@/components/dashboard/charts/charts";
-import { DashboardTable } from "@/components/dashboard/table/table";
-import { Separator } from "@/components/ui/separator";
-import { DashboardSidebar } from "@/components/dashboard/sidebar/sidebar";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
-import { columns } from "./columns";
 
-export default function Dashboard() {
-  const { data: session } = useSession();
+export default async function Dashboard() {
+  const session = await getServerSession();
 
-  if (!session) {
-    redirect("/", RedirectType.replace);
-  }
+  const data = await fetch(`${process.env.FASTAPI_URL}}/applications/me`);
+  const applications = await data.json();
 
   return (
     <SidebarProvider>
@@ -40,8 +35,8 @@ export default function Dashboard() {
           <Separator orientation="vertical" />
         </div>
         <Separator />
-        <DashboardCharts applications={[]} />
-        <DashboardTable columns={columns} data={[]} />
+        <DashboardCharts applications={applications} />
+        <DashboardTable columns={columns} data={applications} />
       </SidebarInset>
     </SidebarProvider>
   );

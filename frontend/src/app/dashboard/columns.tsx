@@ -1,7 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit2Icon, EllipsisIcon, EyeIcon, Trash2Icon } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
+import { DashboardTableHeader } from "@/components/dashboard/table/header";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,6 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Edit2Icon, EllipsisIcon, EyeIcon, Trash2Icon } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -16,8 +18,6 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { z } from "zod";
-import { DashboardTableHeader } from "@/components/dashboard/table/header";
-import { Checkbox } from "@/components/ui/checkbox";
 
 export const applicationStatuses = [
   "accepted",
@@ -31,6 +31,7 @@ export const applicationStatuses = [
 export type ApplicationStatus = (typeof applicationStatuses)[number];
 
 export const ApplicationSchema = z.object({
+  id: z.uuidv4(),
   position: z.string(),
   company: z.string(),
   submittedOn: z.date(),
@@ -65,25 +66,25 @@ export const columns: ColumnDef<Application>[] = [
   {
     accessorKey: "position",
     header: ({ column }) => (
-      <DashboardTableHeader column={column} text="Position" />
+      <DashboardTableHeader column={column} title="Position" />
     ),
   },
   {
     accessorKey: "company",
     header: ({ column }) => (
-      <DashboardTableHeader column={column} text="Company" />
+      <DashboardTableHeader column={column} title="Company" />
     ),
   },
   {
     accessorKey: "submittedOn",
     header: ({ column }) => (
-      <DashboardTableHeader column={column} text="Submitted On" />
+      <DashboardTableHeader column={column} title="Submitted On" />
     ),
   },
   {
     accessorKey: "status",
     header: ({ column }) => (
-      <DashboardTableHeader column={column} text="Status" />
+      <DashboardTableHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
       const { status } = row.original;

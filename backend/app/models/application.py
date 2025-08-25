@@ -50,7 +50,7 @@ class Application(SQLModel, table=True):
         description="Current status of the application."
     )
 
-    owner_id: int = Field(
+    owner_id: UUID = Field(
         title="Owner ID",
         description="Unique identifier of the application's owner.",
         foreign_key="users.id",

@@ -29,7 +29,7 @@ import { useTheme } from "next-themes";
 import { AddApplicationDialog } from "./add-application-dialog";
 import { Session } from "next-auth";
 
-export function DashboardSidebar({ session }: { session: Session }) {
+export function DashboardSidebar({ session }: { session: Session | null }) {
   const { theme, setTheme } = useTheme();
 
   return (

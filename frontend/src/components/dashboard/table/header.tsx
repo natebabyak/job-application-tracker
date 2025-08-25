@@ -1,34 +1,57 @@
-import { Application } from "@/app/dashboard/columns";
 import { Button } from "@/components/ui/button";
 import {
   ChevronDownIcon,
   ChevronsUpDownIcon,
   ChevronUpIcon,
+  EyeOffIcon,
 } from "lucide-react";
 import { Column } from "@tanstack/react-table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-export function DashboardTableHeader({
+interface DashboardTableHeaderProps<TData, TValue> {
+  column: Column<TData, TValue>;
+  title: string;
+}
+
+export function DashboardTableHeader<TData, TValue>({
   column,
-  text,
-}: {
-  column: Column<Application>;
-  text: string;
-}) {
-  const isSorted = column.getIsSorted();
-
+  title,
+}: DashboardTableHeaderProps<TData, TValue>) {
   return (
-    <Button
-      onClick={() => column.toggleSorting(isSorted === "asc")}
-      variant="ghost"
-    >
-      {text}
-      {!isSorted ? (
-        <ChevronsUpDownIcon />
-      ) : isSorted === "asc" ? (
-        <ChevronUpIcon />
-      ) : (
-        <ChevronDownIcon />
-      )}
-    </Button>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button size="sm" variant="ghost">
+          {title}
+          {column.getIsSorted() === "asc" ? (
+            <ChevronUpIcon />
+          ) : column.getIsSorted() === "desc" ? (
+            <ChevronDownIcon />
+          ) : (
+            <ChevronsUpDownIcon />
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start">
+        <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
+          <ChevronUpIcon />
+          Ascending
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
+          <ChevronDownIcon />
+          Descending
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
+          <EyeOffIcon />
+          Hide
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

@@ -8,14 +8,14 @@ import { signIn } from "next-auth/react";
 
 export function SignInButtons() {
   return (
-    <div className="grid gap-4 w-sm mx-auto">
+    <div className="grid gap-4 max-w-sm w-full px-4 md:px-0">
       <Button onClick={() => signIn("github", { callbackUrl: "/dashboard" })}>
         <GithubIcon />
         Continue with GitHub
       </Button>
       <div className="relative">
         <Separator />
-        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xs bg-background p-2 font-medium">
+        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xs bg-background p-2 font-medium text-muted-foreground">
           OR
         </span>
       </div>

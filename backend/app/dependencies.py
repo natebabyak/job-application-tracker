@@ -1,9 +1,11 @@
+from app.models.user import Provider, User
 from dotenv import load_dotenv
-from fastapi import Depends, Header, HTTPException, status
+from fastapi import Depends, HTTPException, status
 from fastapi_nextauth_jwt import NextAuthJWT  # type: ignore
 import os
-from sqlmodel import create_engine, Session, SQLModel
-from typing import Annotated, Dict, Generator, Literal
+from sqlmodel import create_engine, select, Session, SQLModel
+from typing import Annotated, Dict, Generator
+from uuid import UUID
 
 load_dotenv()
 
@@ -36,47 +38,49 @@ def get_session() -> Generator[Session, None, None]:
 JWT = NextAuthJWT()
 
 
-def verify_api_key(x_api_key: Annotated[str, Header()]) -> Literal[True]:
-    """Verifies the internal API key."""
-    if API_KEY is None:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="API key is None."
-        )
-
-    if x_api_key != API_KEY:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Invalid API key."
-        )
-
-    return True
-
-
-def get_current_user_id(token: Annotated[Dict[str, int], Depends(JWT)]) -> int:
+def get_current_user_id(
+    token: Annotated[Dict[str, Provider | int], Depends(JWT)],
+    session: Annotated[Session, Depends(get_session)]
+) -> UUID:
     """Gets the current user's unique identifier.
 
     Parameters
     ----------
-    token : Dict[str, int]
-        JSON web token containing the user's unique identifier.
+    token : Dict[str, Provider | int]
+        JSON web token containing the user's provider and provider ID.
 
     Returns
     -------
-    int
+    UUID
         Current user's unique identifier.
 
     Raises
     ------
     HTTPException
-        If the user's ID does not exist.
+        If the token is invalid.
     """
-    user_id = token.get('sub')
+    provider = token.get('provider')
+    provider_id = token.get('providerId')
 
-    if user_id is None:
+    if provider is None or provider_id is None:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="User ID is None."
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token."
         )
 
-    return user_id
+    user = session.exec(select(User).where(
+        User.provider == Provider(provider),
+        User.provider_id == int(provider_id)
+    )).first()
+
+    if user is None:
+        user = User(
+            provider=Provider(provider),
+            provider_id=int(provider_id)
+        )
+
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+
+    return user.id

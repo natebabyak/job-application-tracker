@@ -13,6 +13,33 @@ export const authOptions: AuthOptions = {
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     }),
   ],
+  session: {
+    strategy: "jwt",
+  },
+  callbacks: {
+    async jwt({ token, account, profile }) {
+      if (account) {
+        token.provider = account.provider;
+        token.providerId = account.providerAccountId;
+      }
+
+      if (profile) {
+        token.picture = profile.image;
+        token.name = profile.name;
+        token.email = profile.email;
+      }
+
+      return token;
+    },
+    async session({ session, token }) {
+      session.user.provider = token.provider as string;
+      session.user.providerId = token.providerId as string;
+      session.user.picture = token.picture as string;
+      session.user.name = token.username as string;
+      session.user.email = token.email as string;
+      return session;
+    },
+  },
 };
 
 export const getSession = () => getServerSession(authOptions);

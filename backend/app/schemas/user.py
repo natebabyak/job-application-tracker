@@ -1,12 +1,24 @@
+from app.models.user import Provider
 from datetime import datetime
 from sqlmodel import Field, SQLModel
+from uuid import UUID
 
 
 class UserBase(SQLModel):
     """Base schema for a user."""
-    id: int = Field(
+    id: UUID = Field(
         title="ID",
         description="Unique identifier of the user."
+    )
+
+    provider: Provider = Field(
+        title="Provider",
+        description="Authentication provider of the user.",
+    )
+
+    provider_id: int = Field(
+        title="Provider ID",
+        description="Unique identifier from the provider of the user."
     )
 
 
@@ -19,12 +31,12 @@ class UserRead(UserBase):
     """Schema for reading a user."""
     created_at: datetime = Field(
         title="Created At",
-        description="Timestamp when the application was created."
+        description="Timestamp when the user was created."
     )
 
     updated_at: datetime = Field(
         title="Updated At",
-        description="Timestamp when the application was last updated."
+        description="Timestamp when the user was last updated."
     )
 
 

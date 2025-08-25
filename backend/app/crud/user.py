@@ -1,7 +1,8 @@
 from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate
 from fastapi import HTTPException, status
-from sqlmodel import Session
+from sqlmodel import select, Session
+from uuid import UUID
 
 
 def create_user(
@@ -22,7 +23,12 @@ def create_user(
     User
         Created user.
     """
-    existing_user = session.get(User, user_create.id)
+    existing_user = session.exec(
+        select(User).where(
+            User.provider == user_create.provider and
+            User.provider_id == user_create.provider_id
+        )
+    ).first()
 
     if existing_user is not None:
         return existing_user
@@ -37,14 +43,14 @@ def create_user(
 
 
 def read_user(
-    user_id: int,
+    user_id: UUID,
     session: Session
 ) -> User:
     """Reads a user.
 
     Parameters
     ----------
-    user_id : int
+    user_id : UUID
         Unique identifier of the user to read.
     session : Session
         Database session.
@@ -111,14 +117,14 @@ def update_user(
 
 
 def delete_user(
-    user_id: int,
+    user_id: UUID,
     session: Session
 ) -> None:
     """Deletes a user.
 
     Parameters
     ----------
-    user_id : int
+    user_id : UUID
         Unique identifier of the user to delete.
     session : Session
         Database session.
