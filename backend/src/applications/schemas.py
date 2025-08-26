@@ -1,4 +1,4 @@
-from backend.src.applications.models import Status
+from src.applications.models import Status
 from datetime import date, datetime
 from sqlmodel import Field, SQLModel
 from uuid import UUID

@@ -1,6 +1,7 @@
 import { getSession } from "@/auth";
 import "./globals.css";
-import { Providers } from "@/components/providers/providers";
+import { SessionProvider } from "@/components/session-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export default async function Layout({
   children,
@@ -13,7 +14,16 @@ export default async function Layout({
     <html lang="en" suppressHydrationWarning>
       <head />
       <body>
-        <Providers session={session}>{children}</Providers>
+        <SessionProvider session={session}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );

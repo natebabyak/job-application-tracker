@@ -1,3 +1,5 @@
+"use client";
+
 import { Application } from "@/app/dashboard/columns";
 import {
   Card,
@@ -20,7 +22,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ApplicationsByStatusChart({
+export function ApplicationsByPositionChart({
   applications,
 }: {
   applications: Application[];

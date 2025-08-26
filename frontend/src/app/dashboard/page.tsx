@@ -1,7 +1,4 @@
 import { columns } from "./columns";
-import { DashboardCharts } from "@/components/dashboard/charts/charts";
-import { DashboardSidebar } from "@/components/dashboard/sidebar/sidebar";
-import { DashboardTable } from "@/components/dashboard/table/table";
 import { getServerSession } from "next-auth";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -14,12 +11,21 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { DashboardSidebar } from "./sidebar/sidebar";
+import { DashboardCharts } from "./charts/charts";
+import { DashboardTable } from "./table/table";
 
 export default async function Dashboard() {
   const session = await getServerSession();
 
-  const data = await fetch(`${process.env.FASTAPI_URL}}/applications/me`);
+  const data = await fetch(`${process.env.FASTAPI_URL}/applications/me`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
   const applications = await data.json();
+  console.log(applications);
 
   return (
     <SidebarProvider>

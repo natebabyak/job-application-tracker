@@ -1,8 +1,9 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
-import { DashboardTableHeader } from "@/components/dashboard/table/header";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +19,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { z } from "zod";
+import { DashboardTableHeader } from "./table/header";
 
 export const applicationStatuses = [
   "accepted",

@@ -28,6 +28,7 @@ import * as React from "react";
 import { useTheme } from "next-themes";
 import { AddApplicationDialog } from "./add-application-dialog";
 import { Session } from "next-auth";
+import { AptIcon } from "@/components/icons/apt";
 
 export function DashboardSidebar({ session }: { session: Session | null }) {
   const { theme, setTheme } = useTheme();
@@ -36,16 +37,7 @@ export function DashboardSidebar({ session }: { session: Session | null }) {
     <Sidebar variant="inset">
       <SidebarHeader>
         <div className="flex gap-2 select-none items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 1155 1000"
-            className="size-6"
-          >
-            <path
-              d="M 0 1000 L 577.5 0 L 1155 1000 C 1155 1000, 577.5 500, 0 1000"
-              fill="currentColor"
-            />
-          </svg>
+          <AptIcon className="size-6" />
           <h1 className="text-2xl font-bold">Apt</h1>
         </div>
       </SidebarHeader>
@@ -66,14 +58,18 @@ export function DashboardSidebar({ session }: { session: Session | null }) {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
                   <Avatar>
-                    <AvatarImage src={session.user.image} />
+                    <AvatarImage src={session?.user.picture} />
                     <AvatarFallback>
                       <Skeleton />
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid">
-                    <span>{session.user.name}</span>
-                    <span>{session.user.email}</span>
+                    {session ? <span>{session?.user.name}</span> : <Skeleton />}
+                    {session ? (
+                      <span>{session?.user.email}</span>
+                    ) : (
+                      <Skeleton />
+                    )}
                   </div>
                   <EllipsisIcon className="size-4" />
                 </SidebarMenuButton>
@@ -81,14 +77,18 @@ export function DashboardSidebar({ session }: { session: Session | null }) {
               <DropdownMenuContent side="right">
                 <DropdownMenuLabel className="flex">
                   <Avatar>
-                    <AvatarImage src={session.user.image} />
+                    <AvatarImage src={session?.user.picture} />
                     <AvatarFallback>
                       <Skeleton />
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid">
-                    <span>{session.user.name}</span>
-                    <span>{session.user.email}</span>
+                    {session ? <span>{session?.user.name}</span> : <Skeleton />}
+                    {session ? (
+                      <span>{session?.user.email}</span>
+                    ) : (
+                      <Skeleton />
+                    )}
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
