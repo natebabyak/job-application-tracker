@@ -1,18 +1,8 @@
-from app.models.user import User
+from src.applications.constants import Status
 from datetime import date, datetime, timezone
-from enum import Enum
 from sqlmodel import Field, Relationship, SQLModel
+from src.users.models import User
 from uuid import UUID, uuid4
-
-
-class Status(str, Enum):
-    """Status of an application."""
-    ACCEPTED = "accepted"
-    DECLINED = "declined"
-    INTERVIEWING = "interviewing"
-    OFFERED = "offered"
-    REJECTED = "rejected"
-    SUBMITTED = "submitted"
 
 
 class Application(SQLModel, table=True):

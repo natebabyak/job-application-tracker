@@ -54,8 +54,14 @@ export function AddApplicationDialog() {
     },
   });
 
-  function onSubmit(application: Application) {
-    console.log(application);
+  async function onSubmit(application: Application) {
+    await fetch(`${process.env.API_URL}/applications`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(application),
+    });
   }
 
   return (

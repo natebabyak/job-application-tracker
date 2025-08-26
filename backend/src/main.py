@@ -1,8 +1,9 @@
-from app.dependencies import create_tables
-from app.routers import applications, users
+from src.applications.router import router as applications_router
 from contextlib import asynccontextmanager
+from src.database import create_tables
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from src.users.router import router as users_router
 
 
 @asynccontextmanager
@@ -33,5 +34,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(applications.router)
-app.include_router(users.router)
+app.include_router(applications_router)
+app.include_router(users_router)

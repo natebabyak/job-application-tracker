@@ -1,6 +1,8 @@
-from app.models.user import Provider
 from datetime import datetime
+from pydantic import BaseModel
 from sqlmodel import Field, SQLModel
+from src.users.constants import Theme
+from src.users.models import Provider
 from uuid import UUID
 
 
@@ -40,6 +42,6 @@ class UserRead(UserBase):
     )
 
 
-class UserUpdate(UserBase):
-    """Schema for updating a user."""
-    pass
+class UserThemeUpdate(BaseModel):
+    """Schema for updating the preferred theme of a user."""
+    theme: Theme

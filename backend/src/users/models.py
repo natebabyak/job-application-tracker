@@ -1,24 +1,11 @@
 from datetime import datetime, timezone
-from enum import Enum
 from sqlmodel import Field, Relationship, SQLModel
 from typing import List, TYPE_CHECKING
+from src.users.constants import Provider, Theme
 from uuid import UUID, uuid4
 
 if TYPE_CHECKING:
-    from app.models.application import Application
-
-
-class Provider(str, Enum):
-    """Authentication provider of a user."""
-    DISCORD = "discord"
-    GITHUB = "github"
-
-
-class Theme(str, Enum):
-    """Preferred theme of a user."""
-    DARK = "dark"
-    LIGHT = "light"
-    SYSTEM = "system"
+    from src.applications.models import Application
 
 
 class User(SQLModel, table=True):

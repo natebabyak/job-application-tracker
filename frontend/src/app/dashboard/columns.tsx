@@ -31,7 +31,6 @@ export const applicationStatuses = [
 export type ApplicationStatus = (typeof applicationStatuses)[number];
 
 export const ApplicationSchema = z.object({
-  id: z.uuidv4(),
   position: z.string(),
   company: z.string(),
   submittedOn: z.date(),
