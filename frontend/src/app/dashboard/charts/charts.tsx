@@ -10,8 +10,8 @@ export function DashboardCharts({
   applications: Application[];
 }) {
   return (
-    <div className="grid gap-4 4-8">
-      <div className="grid gap-4 grid-cols-3">
+    <div className="grid gap-8 p-8">
+      <div className="grid gap-8 grid-cols-3">
         <ApplicationsByStatusChart applications={applications} />
         <ApplicationsByCompanyChart applications={applications} />
         <ApplicationsByPositionChart applications={applications} />

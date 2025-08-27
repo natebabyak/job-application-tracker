@@ -2,10 +2,11 @@ from src.database import get_session
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import select, Session
 from typing import Annotated
+from src.users.constants import Theme
+from src.users.dependencies import get_current_user_id
 from src.users.models import User
 from src.users.schemas import UserCreate, UserRead
 from uuid import UUID
-from src.users.dependencies import get_current_user_id
 
 router = APIRouter(
     prefix="/users",
@@ -54,7 +55,7 @@ async def read_user(
     user_id: UUID,
     session: Annotated[Session, Depends(get_session)]
 ) -> User:
-    """Reads a user.
+    """Reads a user by their unique identifier.
 
     Parameters
     ----------
@@ -76,16 +77,20 @@ async def read_user(
     user = session.get(User, user_id)
 
     if user is None:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "User not found.")
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND,
+            f"User with ID '{user_id}' not found."
+        )
 
     return user
 
 
 @router.patch("/me/theme")
 async def update_user(
+    user_id: Annotated[UUID, Depends(get_current_user_id)],
+    theme: Theme,
     session: Annotated[Session, Depends(get_session)]
 ) -> None:
-    """"""
     raise NotImplementedError
 
 
@@ -94,7 +99,7 @@ async def delete_user(
     user_id: Annotated[UUID, Depends(get_current_user_id)],
     session: Annotated[Session, Depends(get_session)]
 ) -> None:
-    """Deletes a user.
+    """Deletes a user by their unique identifier.
 
     Parameters
     ----------
@@ -113,7 +118,7 @@ async def delete_user(
     if user is None:
         raise HTTPException(
             status.HTTP_404_NOT_FOUND,
-            f"User not found."
+            f"User with ID '{user_id}' not found."
         )
 
     session.delete(user)

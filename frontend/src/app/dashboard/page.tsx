@@ -25,7 +25,6 @@ export default async function Dashboard() {
     },
   });
   const applications = await data.json();
-  console.log(applications);
 
   return (
     <SidebarProvider>

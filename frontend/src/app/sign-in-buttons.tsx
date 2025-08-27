@@ -9,7 +9,7 @@ import { signIn } from "next-auth/react";
 export function SignInButtons() {
   return (
     <div className="grid gap-4 max-w-sm w-full px-4 md:px-0">
-      <Button onClick={() => signIn("github", { callbackUrl: "/dashboard" })}>
+      <Button onClick={() => signIn("github")}>
         <GithubIcon />
         Continue with GitHub
       </Button>
