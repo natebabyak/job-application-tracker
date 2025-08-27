@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-200 -200 1400 1400">
+    <rect 
+        width="1400"
+        height="1400"
+        x="-200"
+        y="-200"
+        rx="200"
+        ry="200"
+        fill="black"
+    />
+    <path 
+        d="M -77.5 1000 L 500 0 L 1077.5 1000 C 1077.5 1000, 500 500, -77.5 1000"
+        fill="white"
+    />
+</svg>
