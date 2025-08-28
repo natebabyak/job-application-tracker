@@ -2,7 +2,6 @@ from src.database import get_session
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import select, Session
 from typing import Annotated
-from src.users.constants import Theme
 from src.users.dependencies import get_current_user_id
 from src.users.models import User
 from src.users.schemas import UserCreate, UserRead
@@ -33,8 +32,10 @@ async def create_user(
     User
         Created user.
     """
-    statement = select(User).where(User.provider == user_create.provider).where(
-        User.provider_id == user_create.provider_id)
+    statement = select(User).where(
+        User.provider == user_create.provider,
+        User.provider_account_id == user_create.provider_account_id
+    )
 
     user = session.exec(statement).first()
 
@@ -83,15 +84,6 @@ async def read_user(
         )
 
     return user
-
-
-@router.patch("/me/theme")
-async def update_user(
-    user_id: Annotated[UUID, Depends(get_current_user_id)],
-    theme: Theme,
-    session: Annotated[Session, Depends(get_session)]
-) -> None:
-    raise NotImplementedError
 
 
 @router.delete("/me")

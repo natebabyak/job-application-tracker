@@ -47,6 +47,30 @@ async def create_application(
     return new_application
 
 
+@router.get("/me", response_model=List[ApplicationRead])
+async def read_applications(
+    owner_id: Annotated[UUID, Depends(get_current_user_id)],
+    session: Annotated[Session, Depends(get_session)]
+) -> List[Application]:
+    """Reads a user's applications.
+
+    Parameters
+    ----------
+    owner_id : UUID
+        Unique identifier of the owner of the applications to read.
+    session : Session
+        Database session.
+
+    Returns
+    -------
+    List[Application]
+        Read applications.
+    """
+    return list(session.exec(
+        select(Application).where(Application.owner_id == owner_id)
+    ).all())
+
+
 @router.get("/{application_id}", response_model=ApplicationRead)
 async def read_application(
     application_id: UUID,
@@ -80,30 +104,6 @@ async def read_application(
         )
 
     return application
-
-
-@router.get("/me", response_model=List[ApplicationRead])
-async def read_applications(
-    owner_id: Annotated[UUID, Depends(get_current_user_id)],
-    session: Annotated[Session, Depends(get_session)]
-) -> List[Application]:
-    """Reads a user's applications.
-
-    Parameters
-    ----------
-    owner_id : UUID
-        Unique identifier of the owner of the applications to read.
-    session : Session
-        Database session.
-
-    Returns
-    -------
-    List[Application]
-        Read applications.
-    """
-    return list(session.exec(
-        select(Application).where(Application.owner_id == owner_id)
-    ).all())
 
 
 @router.put("/{application_id}", response_model=ApplicationRead)

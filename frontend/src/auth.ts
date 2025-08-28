@@ -1,46 +1,42 @@
-import { AuthOptions, getServerSession } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
-import GithubProvider from "next-auth/providers/github";
+import Discord from "next-auth/providers/discord";
+import GitHub from "next-auth/providers/github";
+import NextAuth from "next-auth";
 
-export const authOptions: AuthOptions = {
-  providers: [
-    DiscordProvider({
-      clientId: process.env.DISCORD_CLIENT_ID!,
-      clientSecret: process.env.DISCORD_CLIENT_SECRET!,
-    }),
-    GithubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID!,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-    }),
-  ],
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  providers: [GitHub, Discord],
   session: {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, account, profile }) {
-      if (account) {
-        token.provider = account.provider;
-        token.providerId = account.providerAccountId;
-      }
-
-      if (profile) {
-        token.picture = profile.image;
-        token.name = profile.name;
-        token.email = profile.email;
-      }
+    async jwt({ token, user }) {
+      token.email = user.email;
+      token.name = user.name;
+      token.picture = user.image;
 
       return token;
     },
     async session({ session, token }) {
-      session.user.provider = token.provider as string;
-      session.user.providerId = token.providerId as string;
-      session.user.picture = token.picture as string;
-      session.user.name = token.name as string;
-      session.user.email = token.email as string;
+      if (session.user) {
+        session.user.email = token.email;
+        session.user.image = token.picture;
+        session.user.name = token.name;
+      }
 
       return session;
     },
   },
-};
-
-export const getSession = () => getServerSession(authOptions);
+  events: {
+    async signIn({ account }) {
+      const response = await fetch(`${process.env.API_URL}/users/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          provider: account?.provider,
+          provider_account_id: Number(account?.providerAccountId),
+        }),
+      });
+    },
+  },
+});

@@ -1,26 +1,19 @@
 from datetime import datetime
-from pydantic import BaseModel
 from sqlmodel import Field, SQLModel
-from src.users.constants import Theme
 from src.users.models import Provider
 from uuid import UUID
 
 
 class UserBase(SQLModel):
     """Base schema for a user."""
-    id: UUID = Field(
-        title="ID",
-        description="Unique identifier of the user."
-    )
-
     provider: Provider = Field(
         title="Provider",
-        description="Authentication provider of the user.",
+        description="Provider of the user."
     )
 
-    provider_id: int = Field(
-        title="Provider ID",
-        description="Unique identifier from the provider of the user."
+    provider_account_id: int = Field(
+        title="Provider Account ID",
+        description="Provider account ID of the user."
     )
 
 
@@ -31,6 +24,11 @@ class UserCreate(UserBase):
 
 class UserRead(UserBase):
     """Schema for reading a user."""
+    id: UUID = Field(
+        title="ID",
+        description="Unique identifier of the user."
+    )
+
     created_at: datetime = Field(
         title="Created At",
         description="Timestamp when the user was created."
@@ -40,8 +38,3 @@ class UserRead(UserBase):
         title="Updated At",
         description="Timestamp when the user was last updated."
     )
-
-
-class UserThemeUpdate(BaseModel):
-    """Schema for updating the preferred theme of a user."""
-    theme: Theme

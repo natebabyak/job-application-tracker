@@ -14,13 +14,15 @@ import {
 import { DashboardSidebar } from "./sidebar/sidebar";
 import { DashboardCharts } from "./charts/charts";
 import { DashboardTable } from "./table/table";
+import { getToken } from "next-auth/jwt";
 
 export default async function Dashboard() {
   const session = await getServerSession();
 
-  const data = await fetch(`${process.env.FASTAPI_URL}/applications/me`, {
+  const data = await fetch(`${process.env.API_URL}/applications/me`, {
     method: "GET",
     headers: {
+      Authorization: `Bearer ${getToken({ req, raw: true })}`,
       "Content-Type": "application/json",
     },
   });

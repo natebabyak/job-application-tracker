@@ -14,13 +14,15 @@ def get_current_user_id(
     session: Annotated[Session, Depends(get_session)]
 ) -> UUID:
     provider = token.get('provider')
-    provider_id = token.get('providerId')
+    provider_account_id = token.get('provider_account_id')
 
-    if provider is None or provider_id is None:
+    if provider is None or provider_account_id is None:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED)
 
-    statement = select(User).where(User.provider == provider).where(
-        User.provider_id == provider_id)
+    statement = select(User).where(
+        User.provider == provider,
+        User.provider_account_id == provider_account_id
+    )
 
     user = session.exec(statement).first()
 

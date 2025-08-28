@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from sqlmodel import Field, Relationship, SQLModel
 from typing import List, TYPE_CHECKING
-from src.users.constants import Provider, Theme
+from src.users.constants import Provider
 from uuid import UUID, uuid4
 
 if TYPE_CHECKING:
@@ -21,18 +21,12 @@ class User(SQLModel, table=True):
 
     provider: Provider = Field(
         title="Provider",
-        description="Authentication provider of the user.",
+        description="Provider of the user."
     )
 
-    provider_id: int = Field(
-        title="Provider ID",
-        description="Unique identifier from the provider of the user."
-    )
-
-    theme: Theme = Field(
-        default=Theme.SYSTEM,
-        title="Theme",
-        description="Preferred theme of the user."
+    provider_account_id: int = Field(
+        title="Provider Account ID",
+        description="Provider account ID of the user."
     )
 
     created_at: datetime = Field(

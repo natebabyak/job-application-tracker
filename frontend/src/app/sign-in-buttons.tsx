@@ -9,7 +9,7 @@ import { signIn } from "next-auth/react";
 export function SignInButtons() {
   return (
     <div className="grid gap-4 max-w-sm w-full px-4 md:px-0">
-      <Button onClick={() => signIn("github")}>
+      <Button onClick={() => signIn("github", { callbackUrl: "/dashboard" })}>
         <GithubIcon />
         Continue with GitHub
       </Button>
@@ -19,7 +19,10 @@ export function SignInButtons() {
           OR
         </span>
       </div>
-      <Button onClick={() => signIn("discord")} variant="outline">
+      <Button
+        onClick={() => signIn("discord", { callbackUrl: "/dashboard" })}
+        variant="outline"
+      >
         <DiscordIcon />
         Continue with Discord
       </Button>
