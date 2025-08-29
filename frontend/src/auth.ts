@@ -1,42 +1,20 @@
 import Discord from "next-auth/providers/discord";
 import GitHub from "next-auth/providers/github";
 import NextAuth from "next-auth";
+import { Pool } from "pg";
+import PostgresAdapter from "@auth/pg-adapter";
+
+const pool = new Pool({
+  host: process.env.DATABASE_HOST,
+  user: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASSWORD,
+  database: process.env.DATABASE_NAME,
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
+});
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  adapter: PostgresAdapter(pool),
   providers: [GitHub, Discord],
-  session: {
-    strategy: "jwt",
-  },
-  callbacks: {
-    async jwt({ token, user }) {
-      token.email = user.email;
-      token.name = user.name;
-      token.picture = user.image;
-
-      return token;
-    },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.email = token.email;
-        session.user.image = token.picture;
-        session.user.name = token.name;
-      }
-
-      return session;
-    },
-  },
-  events: {
-    async signIn({ account }) {
-      const response = await fetch(`${process.env.API_URL}/users/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          provider: account?.provider,
-          provider_account_id: Number(account?.providerAccountId),
-        }),
-      });
-    },
-  },
 });

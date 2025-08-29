@@ -19,7 +19,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { z } from "zod";
-import { DashboardTableHeader } from "./table/header";
+import DashboardTableHeader from "./components/table-header";
 
 export const applicationStatuses = [
   "accepted",
@@ -98,8 +98,8 @@ export const columns: ColumnDef<Application>[] = [
                 status === "accepted" || status === "offered"
                   ? "default"
                   : status === "declined" || status === "rejected"
-                  ? "destructive"
-                  : "secondary"
+                    ? "destructive"
+                    : "secondary"
               }
             >
               {status}

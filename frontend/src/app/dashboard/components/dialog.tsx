@@ -43,7 +43,7 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-export function AddApplicationDialog() {
+export default function DashboardSidebarDialog() {
   const form = useForm<z.infer<typeof ApplicationSchema>>({
     resolver: zodResolver(ApplicationSchema),
     defaultValues: {

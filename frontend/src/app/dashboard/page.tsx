@@ -1,5 +1,3 @@
-import { columns } from "./columns";
-import { getServerSession } from "next-auth";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -11,18 +9,21 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { DashboardSidebar } from "./sidebar/sidebar";
-import { DashboardCharts } from "./charts/charts";
-import { DashboardTable } from "./table/table";
-import { getToken } from "next-auth/jwt";
+import { auth } from "@/auth";
+import DashboardSidebar from "./components/sidebar";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard - Apt",
+};
 
 export default async function Dashboard() {
-  const session = await getServerSession();
+  const session = await auth();
 
   const data = await fetch(`${process.env.API_URL}/applications/me`, {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${getToken({ req, raw: true })}`,
+      Authorization: `Bearer FAKE_JWT`,
       "Content-Type": "application/json",
     },
   });
@@ -32,7 +33,7 @@ export default async function Dashboard() {
     <SidebarProvider>
       <DashboardSidebar session={session} />
       <SidebarInset>
-        <div className="flex p-2 gap-2 items-center">
+        <div className="flex items-center gap-2 p-2">
           <Tooltip>
             <TooltipTrigger asChild>
               <SidebarTrigger />
@@ -42,8 +43,6 @@ export default async function Dashboard() {
           <Separator orientation="vertical" />
         </div>
         <Separator />
-        <DashboardCharts applications={applications} />
-        <DashboardTable columns={columns} data={applications} />
       </SidebarInset>
     </SidebarProvider>
   );

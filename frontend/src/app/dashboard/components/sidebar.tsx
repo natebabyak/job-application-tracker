@@ -24,26 +24,30 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import * as React from "react";
 import { useTheme } from "next-themes";
-import { AddApplicationDialog } from "./add-application-dialog";
-import { Session } from "next-auth";
 import { AptIcon } from "@/components/icons/apt";
+import { signOut } from "@/auth";
+import { Session } from "next-auth";
+import DashboardSidebarDialog from "./dialog";
 
-export function DashboardSidebar({ session }: { session: Session | null }) {
+export default function DashboardSidebar({
+  session,
+}: {
+  session: Session | null;
+}) {
   const { theme, setTheme } = useTheme();
 
   return (
     <Sidebar variant="inset">
       <SidebarHeader>
-        <div className="flex gap-2 select-none items-center">
+        <div className="flex items-center gap-2 select-none">
           <AptIcon className="size-6" />
           <h1 className="text-2xl font-bold">Apt</h1>
         </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarHeader>
-          <AddApplicationDialog />
+          <DashboardSidebarDialog />
         </SidebarHeader>
         <SidebarGroup>
           <SidebarMenu>
@@ -58,15 +62,19 @@ export function DashboardSidebar({ session }: { session: Session | null }) {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
                   <Avatar>
-                    <AvatarImage src={session?.user.picture} />
+                    <AvatarImage src={session?.user?.image ?? undefined} />
                     <AvatarFallback>
                       <Skeleton />
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid">
-                    {session ? <span>{session?.user.name}</span> : <Skeleton />}
                     {session ? (
-                      <span>{session?.user.email}</span>
+                      <span>{session?.user?.name}</span>
+                    ) : (
+                      <Skeleton />
+                    )}
+                    {session ? (
+                      <span>{session?.user?.email}</span>
                     ) : (
                       <Skeleton />
                     )}
@@ -77,15 +85,19 @@ export function DashboardSidebar({ session }: { session: Session | null }) {
               <DropdownMenuContent side="right">
                 <DropdownMenuLabel className="flex">
                   <Avatar>
-                    <AvatarImage src={session?.user.picture} />
+                    <AvatarImage src={session?.user?.image ?? undefined} />
                     <AvatarFallback>
                       <Skeleton />
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid">
-                    {session ? <span>{session?.user.name}</span> : <Skeleton />}
                     {session ? (
-                      <span>{session?.user.email}</span>
+                      <span>{session?.user?.name}</span>
+                    ) : (
+                      <Skeleton />
+                    )}
+                    {session ? (
+                      <span>{session?.user?.email}</span>
                     ) : (
                       <Skeleton />
                     )}
@@ -106,10 +118,17 @@ export function DashboardSidebar({ session }: { session: Session | null }) {
                 </DropdownMenuRadioGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <LogOutIcon />
-                    Sign out
-                  </DropdownMenuItem>
+                  <form
+                    action={async () => {
+                      "use server";
+                      await signOut();
+                    }}
+                  >
+                    <DropdownMenuItem>
+                      <LogOutIcon />
+                      Sign out
+                    </DropdownMenuItem>
+                  </form>
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
