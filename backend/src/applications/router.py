@@ -1,10 +1,10 @@
 from src.applications.dependencies import get_current_user_id
 from src.applications.models import Application
 from src.applications.schemas import ApplicationCreate, ApplicationRead, ApplicationUpdate
-from backend.src.db import get_session
+from src.db import get_session
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import select, Session
-from typing import Annotated, List
+from typing import Annotated
 from uuid import UUID
 
 router = APIRouter(
@@ -16,85 +16,37 @@ router = APIRouter(
 @router.post("/", response_model=ApplicationRead)
 async def create_application(
     application_create: ApplicationCreate,
-    user_id: Annotated[UUID, Depends(get_current_user_id)],
+    user_id: Annotated[str, Depends(get_current_user_id)],
     session: Annotated[Session, Depends(get_session)]
 ) -> Application:
-    """Creates an application.
-
-    Parameters
-    ----------
-    application_create : ApplicationCreate
-        Schema for creating an application.
-    user_id : UUID
-        Unique identifier of the user.
-    session : Session
-        Database session.
-
-    Returns
-    -------
-    Application
-        Created application.
-    """
-    new_application = Application(
+    created_application = Application(
         **application_create.model_dump(),
-        owner_id=user_id
+        user_id=user_id
     )
 
-    session.add(new_application)
+    session.add(created_application)
     session.commit()
-    session.refresh(new_application)
+    session.refresh(created_application)
 
-    return new_application
+    return created_application
 
 
-@router.get("/me", response_model=List[ApplicationRead])
-async def read_applications(
-    owner_id: Annotated[UUID, Depends(get_current_user_id)],
+@router.get("/me", response_model=list[ApplicationRead])
+async def get_applications_by_user_id(
+    user_id: Annotated[str, Depends(get_current_user_id)],
     session: Annotated[Session, Depends(get_session)]
-) -> List[Application]:
-    """Reads a user's applications.
+) -> list[Application]:
+    statement = select(Application).where(Application.user_id == user_id)
+    applications = session.exec(statement)
 
-    Parameters
-    ----------
-    owner_id : UUID
-        Unique identifier of the owner of the applications to read.
-    session : Session
-        Database session.
-
-    Returns
-    -------
-    List[Application]
-        Read applications.
-    """
-    return list(session.exec(
-        select(Application).where(Application.owner_id == owner_id)
-    ).all())
+    return list(applications)
 
 
 @router.get("/{application_id}", response_model=ApplicationRead)
-async def read_application(
+async def get_application_by_id(
     application_id: UUID,
     session: Annotated[Session, Depends(get_session)]
 ) -> Application:
-    """Reads an application.
-
-    Parameters
-    ----------
-    application_id : UUID
-        Unique identifier of the application to read.
-    session : Session
-        Database session.
-
-    Returns
-    -------
-    Application
-        Read application.
-
-    Raises
-    ------
-    HTTPException
-        If the application is not found.
-    """
     application = session.get(Application, application_id)
 
     if application is None:
@@ -107,32 +59,11 @@ async def read_application(
 
 
 @router.put("/{application_id}", response_model=ApplicationRead)
-async def update_application(
+async def update_application_by_id(
     application_id: UUID,
     application_update: ApplicationUpdate,
     session: Annotated[Session, Depends(get_session)],
 ) -> Application:
-    """Updates an application.
-
-    Parameters
-    ----------
-    application_id : UUID
-        Unique identifier of the application.
-    application_update : ApplicationUpdate
-        Schema for updating an application.
-    session : Session
-        Database session.
-
-    Returns
-    -------
-    Application
-        Updated application.
-
-    Raises
-    ------
-    HTTPException
-        If the application is not found.
-    """
     application = session.get(Application, application_id)
 
     if application is None:
@@ -141,13 +72,25 @@ async def update_application(
             detail=f"Application with ID '{application_id}' not found."
         )
 
-    application = Application(**application_update.model_dump())
+    updated_application = Application(**application_update.model_dump())
 
-    session.add(application)
+    session.add(updated_application)
     session.commit()
-    session.refresh(application)
+    session.refresh(updated_application)
 
-    return application
+    return updated_application
+
+
+@router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_applications_by_user_id(
+    user_id: Annotated[str, Depends(get_current_user_id)],
+    session: Annotated[Session, Depends(get_session)]
+) -> None:
+    statement = select(Application).where(Application.user_id == user_id)
+    applications = list(session.exec(statement))
+
+    session.delete(applications)
+    session.commit()
 
 
 @router.delete("/{application_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -155,27 +98,13 @@ async def delete_application(
     application_id: UUID,
     session: Annotated[Session, Depends(get_session)]
 ) -> None:
-    """Deletes an application by its ID.
+    application_to_delete = session.get(Application, application_id)
 
-    Parameters
-    ----------
-    application_id : UUID
-        Unique identifier of the application to delete.
-    session : Session
-        Database session.
-
-    Raises
-    ------
-    HTTPException
-        If the application is not found.
-    """
-    application = session.get(Application, application_id)
-
-    if application is None:
+    if application_to_delete is None:
         raise HTTPException(
             status.HTTP_404_NOT_FOUND,
             f"Application with ID '{application_id}' not found."
         )
 
-    session.delete(application)
+    session.delete(application_to_delete)
     session.commit()

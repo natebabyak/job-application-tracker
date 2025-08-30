@@ -10,9 +10,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { auth } from "@/auth";
-import DashboardSidebar from "./components/sidebar";
+import DashboardSidebar from "../../components/dashboard/sidebar";
 import { Metadata } from "next";
-import DashboardTable from "./components/table";
+import DashboardTable from "../../components/dashboard/table";
 import { columns } from "./columns";
 
 export const metadata: Metadata = {

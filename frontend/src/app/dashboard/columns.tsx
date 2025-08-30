@@ -19,7 +19,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { z } from "zod";
-import DashboardTableHeader from "./components/table-header";
+import DashboardTableHeader from "../../components/dashboard/table-header";
 
 export const applicationStatuses = [
   "accepted",
