@@ -25,8 +25,7 @@ export default async function Dashboard() {
   const data = await fetch(`${process.env.API_URL}/applications/me`, {
     method: "GET",
     headers: {
-      Authorization: `Bearer FAKE_JWT`,
-      "Content-Type": "application/json",
+      Authorization: `Bearer ${session?.user?.id}`,
     },
   });
   const applications = await data.json();
@@ -46,7 +45,6 @@ export default async function Dashboard() {
         </div>
         <Separator />
         <div></div>
-        <DashboardTable columns={columns} data={applications} />
       </SidebarInset>
     </SidebarProvider>
   );

@@ -1,5 +1,4 @@
-import Discord from "next-auth/providers/discord";
-import GitHub from "next-auth/providers/github";
+import authConfig from "./auth.config";
 import NextAuth from "next-auth";
 import { Pool } from "pg";
 import PostgresAdapter from "@auth/pg-adapter";
@@ -16,5 +15,8 @@ const pool = new Pool({
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PostgresAdapter(pool),
-  providers: [GitHub, Discord],
+  session: {
+    strategy: "database",
+  },
+  ...authConfig,
 });

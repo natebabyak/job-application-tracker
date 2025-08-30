@@ -1,7 +1,7 @@
 from src.applications.dependencies import get_current_user_id
 from src.applications.models import Application
 from src.applications.schemas import ApplicationCreate, ApplicationRead, ApplicationUpdate
-from src.database import get_session
+from backend.src.db import get_session
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import select, Session
 from typing import Annotated, List

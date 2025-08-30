@@ -4,6 +4,9 @@
     <h3>Track and optimize your job search from a single, powerful dashboard</h3>
 </div>
 
+> [!NOTE]
+> This app is still in development but is actively being updated
+
 ## Built With
 
 [![Next.js](https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
@@ -21,11 +24,11 @@
 
 ### Version 1.0.0
 
-- [ ] Landing Page
 - [ ] Dashboard
   - [ ] Sidebar
   - [ ] Charts
-  - [ ] Table
+  - [x] Table
+- [ ] Landing Page
 
 ### Version 1.1
 

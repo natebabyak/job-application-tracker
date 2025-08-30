@@ -1,63 +1,32 @@
-from src.applications.constants import Status
-from datetime import date, datetime, timezone
+from datetime import date
 from sqlmodel import Field, Relationship, SQLModel
+from src.applications.constants import Level, Status
 from src.users.models import User
+from typing import Optional, TYPE_CHECKING
 from uuid import UUID, uuid4
+
+if TYPE_CHECKING:
+    from src.users.models import User
 
 
 class Application(SQLModel, table=True):
-    """Model for storing an application."""
+    """Database model of an application."""
     __tablename__ = "applications"  # type: ignore
 
-    id: UUID = Field(
-        default_factory=uuid4,
-        title="ID",
-        description="Unique identifier of the application.",
-        primary_key=True
-    )
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    position: str = Field(min_length=1, max_length=255)
+    company: str = Field(min_length=1, max_length=255)
+    submitted_on: date
+    status: Status
 
-    position: str = Field(
-        title="Position",
-        description="Title of the position applied for.",
-        min_length=1,
-        max_length=255
-    )
+    description: Optional[str]
+    level: Optional[Level]
+    location: Optional[str]
+    normalized_company: Optional[str]
+    normalized_position: Optional[str]
+    skills: Optional[list[str]]
+    url: Optional[str]
 
-    company: str = Field(
-        title="Company",
-        description="Name of the company applied to.",
-        min_length=1,
-        max_length=255
-    )
-
-    submitted_on: date = Field(
-        title="Submitted On",
-        description="Date the application was submitted."
-    )
-
-    status: Status = Field(
-        title="Status",
-        description="Current status of the application."
-    )
-
-    owner_id: UUID = Field(
-        title="Owner ID",
-        description="Unique identifier of the application's owner.",
-        foreign_key="users.id",
-        index=True
-    )
-
-    created_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
-        title="Created At",
-        description="Timestamp when the application was created."
-    )
-
-    updated_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
-        title="Updated At",
-        description="Timestamp when the application was last updated.",
-        sa_column_kwargs={"onupdate": lambda: datetime.now(timezone.utc)},
-    )
-
-    owner: User = Relationship(back_populates="applications")
+    user_id: Optional[int] = Field(
+        default=None, foreign_key="user.id", ondelete="CASCADE")
+    user: User = Relationship(back_populates="applications")

@@ -3,10 +3,8 @@ import Link from "next/link";
 import { Metadata } from "next";
 import { GithubIcon } from "@/components/icons/github";
 import { Button } from "@/components/ui/button";
-import ThemeMenu from "./theme-menu";
-import { signIn } from "@/auth";
-import { DiscordIcon } from "@/components/icons/discord";
-import SignInButtons from "./sign-in-buttons";
+import ThemeMenu from "./components/theme-menu";
+import SignInButtons from "./components/sign-in-buttons";
 
 export const metadata: Metadata = {
   title:
