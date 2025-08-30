@@ -1,13 +1,13 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { Button } from "@/components/ui/button";
 import { DiscordIcon } from "@/components/icons/discord";
 import { GithubIcon } from "@/components/icons/github";
-import { Button } from "@/components/ui/button";
+import { signIn } from "next-auth/react";
 
 export default function SignInButtons() {
   return (
-    <div className="flex max-w-sm gap-2">
+    <div className="flex w-full max-w-sm flex-col gap-2 md:px-4">
       <Button onClick={() => signIn("github", { redirectTo: "/dashboard" })}>
         <GithubIcon />
         Sign in with GitHub

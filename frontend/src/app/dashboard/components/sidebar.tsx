@@ -1,6 +1,6 @@
 "use client";
 
-import { EllipsisIcon, LogOutIcon } from "lucide-react";
+import { EllipsisIcon } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -17,7 +17,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
@@ -26,9 +25,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
 import { AptIcon } from "@/components/icons/apt";
-import { signOut } from "@/auth";
 import { Session } from "next-auth";
 import DashboardSidebarDialog from "./dialog";
+import SignOutButton from "./sign-out-button";
 
 export default function DashboardSidebar({
   session,
@@ -118,17 +117,7 @@ export default function DashboardSidebar({
                 </DropdownMenuRadioGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <form
-                    action={async () => {
-                      "use server";
-                      await signOut();
-                    }}
-                  >
-                    <DropdownMenuItem>
-                      <LogOutIcon />
-                      Sign out
-                    </DropdownMenuItem>
-                  </form>
+                  <SignOutButton />
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>

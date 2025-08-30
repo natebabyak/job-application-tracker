@@ -3,8 +3,10 @@ import Link from "next/link";
 import { Metadata } from "next";
 import { GithubIcon } from "@/components/icons/github";
 import { Button } from "@/components/ui/button";
-import ThemeMenu from "./components/theme-menu";
-import SignInButtons from "./components/sign-in-buttons";
+import ThemeMenu from "./theme-menu";
+import { signIn } from "@/auth";
+import { DiscordIcon } from "@/components/icons/discord";
+import SignInButtons from "./sign-in-buttons";
 
 export const metadata: Metadata = {
   title:
@@ -24,7 +26,7 @@ export default async function Home() {
         <div className="flex items-center gap-2">
           <Button size="icon" variant="ghost">
             <a href="https://github.com/natebabyak/job-application-tracker">
-              <GithubIcon className="size-6" />
+              <GithubIcon />
             </a>
           </Button>
           <ThemeMenu />

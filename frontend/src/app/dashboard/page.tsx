@@ -12,6 +12,8 @@ import {
 import { auth } from "@/auth";
 import DashboardSidebar from "./components/sidebar";
 import { Metadata } from "next";
+import DashboardTable from "./components/table";
+import { columns } from "./columns";
 
 export const metadata: Metadata = {
   title: "Dashboard - Apt",
@@ -43,6 +45,8 @@ export default async function Dashboard() {
           <Separator orientation="vertical" />
         </div>
         <Separator />
+        <div></div>
+        <DashboardTable columns={columns} data={applications} />
       </SidebarInset>
     </SidebarProvider>
   );
