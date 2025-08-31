@@ -1,11 +1,14 @@
+from dotenv import load_dotenv
 import os
 from sqlmodel import create_engine, Session, SQLModel
 from typing import Generator
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+load_dotenv()
+
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 if DATABASE_URL is None:
-    raise ValueError("DATABASE_URL is None")
+    raise ValueError('DATABASE_URL is None')
 
 engine = create_engine(DATABASE_URL, echo=True)
 

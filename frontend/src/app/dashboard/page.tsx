@@ -13,7 +13,9 @@ import { auth } from "@/auth";
 import DashboardSidebar from "../../components/dashboard/sidebar";
 import { Metadata } from "next";
 import DashboardTable from "@/components/dashboard/table";
-import { Application, columns } from "./columns";
+import { columns } from "./columns";
+import { NextResponse } from "next/server";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Dashboard - Apt",
@@ -21,13 +23,25 @@ export const metadata: Metadata = {
 
 export default async function Dashboard() {
   const session = await auth();
+  if (!session) redirect("/");
 
-  const data = await fetch(`${process.env.API_URL}/applications/me`, {
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) throw new Error("API key is undefined");
+
+  const userId = session.user?.id;
+  if (!userId) throw new Error("User ID is undefined");
+
+  const response = await fetch(`${process.env.BACKEND_URL}/applications/me`, {
     method: "GET",
-    credentials: "include",
+    headers: {
+      "X-Api-Key": apiKey,
+      "X-User-Id": userId,
+    },
   });
 
-  const applications: Application[] = await data.json();
+  if (!response.ok) throw new Error("Failed to fetch applications");
+
+  const applications = await response.json();
 
   return (
     <SidebarProvider>

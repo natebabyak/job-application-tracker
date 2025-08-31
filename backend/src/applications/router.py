@@ -8,12 +8,12 @@ from typing import Annotated
 from uuid import UUID
 
 router = APIRouter(
-    prefix="/applications",
-    tags=["applications"],
+    prefix='/applications',
+    tags=['applications'],
 )
 
 
-@router.post("/", response_model=ApplicationRead)
+@router.post('/', response_model=ApplicationRead)
 async def create_application(
     application_create: ApplicationCreate,
     user_id: Annotated[str, Depends(get_current_user_id)],
@@ -31,7 +31,7 @@ async def create_application(
     return created_application
 
 
-@router.get("/me", response_model=list[ApplicationRead])
+@router.get('/me', response_model=list[ApplicationRead])
 async def get_applications(
     user_id: Annotated[str, Depends(get_current_user_id)],
     session: Annotated[Session, Depends(get_session)]
@@ -42,7 +42,7 @@ async def get_applications(
     return list(applications)
 
 
-@router.get("/{application_id}", response_model=ApplicationRead)
+@router.get('/{application_id}', response_model=ApplicationRead)
 async def get_application(
     application_id: UUID,
     session: Annotated[Session, Depends(get_session)]
@@ -58,7 +58,7 @@ async def get_application(
     return application
 
 
-@router.put("/{application_id}", response_model=ApplicationRead)
+@router.put('/{application_id}', response_model=ApplicationRead)
 async def update_application(
     application_id: UUID,
     application_update: ApplicationUpdate,
@@ -81,7 +81,7 @@ async def update_application(
     return updated_application
 
 
-@router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/me', status_code=status.HTTP_204_NO_CONTENT)
 async def delete_applications(
     user_id: Annotated[str, Depends(get_current_user_id)],
     session: Annotated[Session, Depends(get_session)]
@@ -93,7 +93,7 @@ async def delete_applications(
     session.commit()
 
 
-@router.delete("/{application_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/{application_id}', status_code=status.HTTP_204_NO_CONTENT)
 async def delete_application(
     application_id: UUID,
     session: Annotated[Session, Depends(get_session)]

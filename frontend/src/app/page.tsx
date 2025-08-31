@@ -5,6 +5,8 @@ import { GithubIcon } from "@/components/icons/github";
 import { Button } from "@/components/ui/button";
 import ThemeMenu from "../components/home/theme-menu";
 import SignInButtons from "../components/home/sign-in-buttons";
+import { signIn } from "@/auth";
+import { DiscordIcon } from "@/components/icons/discord";
 
 export const metadata: Metadata = {
   title:
@@ -37,7 +39,28 @@ export default async function Home() {
         <p className="text-center text-lg font-medium text-balance">
           Join now and stay on top of your job search.
         </p>
-        <SignInButtons />
+        <form
+          action={async () => {
+            "use server";
+            await signIn("github", { redirectTo: "/dashboard" });
+          }}
+        >
+          <Button type="submit">
+            <GithubIcon />
+            Sign in with GitHub
+          </Button>
+        </form>
+        <form
+          action={async () => {
+            "use server";
+            await signIn("discord", { redirectTo: "/dashboard" });
+          }}
+        >
+          <Button type="submit" variant="outline">
+            <DiscordIcon />
+            Sign in with Discord
+          </Button>
+        </form>
       </main>
       <footer className="w-full p-4">
         <p className="text-center text-balance">

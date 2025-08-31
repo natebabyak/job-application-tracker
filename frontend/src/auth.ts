@@ -4,20 +4,13 @@ import NextAuth from "next-auth";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [Discord, GitHub],
-  session: {
-    strategy: "jwt",
-  },
   callbacks: {
-    session({ session, token }) {
-      if (token.id) session.user.id = token.id;
-      return session;
-    },
-    jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-      }
+    jwt({ token }) {
       return token;
     },
+    session({ session, token }) {
+      session.user.id = token.sub!;
+      return session;
+    },
   },
-  secret: process.env.AUTH_SECRET,
 });

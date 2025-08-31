@@ -6,7 +6,7 @@ import { signOut } from "next-auth/react";
 
 export default function SignOutButton() {
   return (
-    <DropdownMenuItem onClick={() => signOut()}>
+    <DropdownMenuItem onClick={() => signOut({ redirectTo: "/dashboard" })}>
       <LogOutIcon />
       Sign out
     </DropdownMenuItem>

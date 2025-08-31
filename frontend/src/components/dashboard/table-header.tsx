@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import {
-  ChevronDownIcon,
-  ChevronsUpDownIcon,
-  ChevronUpIcon,
+  ArrowDownIcon,
+  ArrowUpDownIcon,
+  ArrowUpIcon,
   EyeOffIcon,
 } from "lucide-react";
 import { Column } from "@tanstack/react-table";
@@ -29,22 +29,22 @@ export default function DashboardTableHeader<TData, TValue>({
         <Button size="sm" variant="ghost">
           {title}
           {column.getIsSorted() === "asc" ? (
-            <ChevronUpIcon />
+            <ArrowUpIcon />
           ) : column.getIsSorted() === "desc" ? (
-            <ChevronDownIcon />
+            <ArrowDownIcon />
           ) : (
-            <ChevronsUpDownIcon />
+            <ArrowUpDownIcon />
           )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
         <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-          <ChevronUpIcon />
-          Ascending
+          <ArrowUpIcon />
+          Sort asc.
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-          <ChevronDownIcon />
-          Descending
+          <ArrowDownIcon />
+          Sort desc.
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>

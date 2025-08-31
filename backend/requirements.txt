@@ -1,5 +1,5 @@
 fastapi
 psycopg2-binary
-PyJWT
+jwcrypto
 sqlmodel
 uvicorn[standard]
