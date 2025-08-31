@@ -1,13 +1,20 @@
+# Set the base image
 FROM python:3.13-slim
 
-WORKDIR /code
+# Set the working directory
+WORKDIR /src
 
-COPY ./requirements.txt /code/requirements.txt
+# Copy requirements.txt to the working directory
+COPY requirements.txt .
 
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy remaining files to the working directory
 COPY . .
 
+# Set the network port
 EXPOSE 8000
 
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Run the application
+CMD ["uvicorn", "main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,5 +1,5 @@
 fastapi
-fastapi-nextauth-jwt
 psycopg2-binary
+PyJWT
 sqlmodel
 uvicorn[standard]

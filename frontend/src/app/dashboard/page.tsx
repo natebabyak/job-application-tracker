@@ -12,8 +12,8 @@ import {
 import { auth } from "@/auth";
 import DashboardSidebar from "../../components/dashboard/sidebar";
 import { Metadata } from "next";
-import DashboardTable from "../../components/dashboard/table";
-import { columns } from "./columns";
+import DashboardTable from "@/components/dashboard/table";
+import { Application, columns } from "./columns";
 
 export const metadata: Metadata = {
   title: "Dashboard - Apt",
@@ -24,11 +24,10 @@ export default async function Dashboard() {
 
   const data = await fetch(`${process.env.API_URL}/applications/me`, {
     method: "GET",
-    headers: {
-      Authorization: `Bearer ${session?.user?.id}`,
-    },
+    credentials: "include",
   });
-  const applications = await data.json();
+
+  const applications: Application[] = await data.json();
 
   return (
     <SidebarProvider>
@@ -44,7 +43,7 @@ export default async function Dashboard() {
           <Separator orientation="vertical" />
         </div>
         <Separator />
-        <div></div>
+        <DashboardTable columns={columns} data={applications} />
       </SidebarInset>
     </SidebarProvider>
   );

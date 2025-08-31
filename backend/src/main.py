@@ -1,8 +1,8 @@
-from src.applications.router import router
 from contextlib import asynccontextmanager
-from backend.src.db import create_tables
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from src.applications.router import router
+from src.db import create_tables
 
 
 @asynccontextmanager
@@ -10,18 +10,11 @@ async def lifespan(app: FastAPI):
     create_tables()
     yield
 
-app = FastAPI(
-    title="Apt",
-    lifespan=lifespan,
-    license_info={
-        "name": "MIT"
-    }
-)
+app = FastAPI(lifespan=lifespan)
 
 origins = [
+    "http://localhost",
     "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://frontend:3000",
 ]
 
 app.add_middleware(

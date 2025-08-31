@@ -1,9 +1,9 @@
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlmodel import select, Session
 from src.applications.dependencies import get_current_user_id
 from src.applications.models import Application
 from src.applications.schemas import ApplicationCreate, ApplicationRead, ApplicationUpdate
 from src.db import get_session
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlmodel import select, Session
 from typing import Annotated
 from uuid import UUID
 
@@ -32,7 +32,7 @@ async def create_application(
 
 
 @router.get("/me", response_model=list[ApplicationRead])
-async def get_applications_by_user_id(
+async def get_applications(
     user_id: Annotated[str, Depends(get_current_user_id)],
     session: Annotated[Session, Depends(get_session)]
 ) -> list[Application]:
@@ -43,7 +43,7 @@ async def get_applications_by_user_id(
 
 
 @router.get("/{application_id}", response_model=ApplicationRead)
-async def get_application_by_id(
+async def get_application(
     application_id: UUID,
     session: Annotated[Session, Depends(get_session)]
 ) -> Application:
@@ -52,14 +52,14 @@ async def get_application_by_id(
     if application is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Application with ID '{application_id}' not found."
+            detail=f"Application with ID '{application_id}' not found"
         )
 
     return application
 
 
 @router.put("/{application_id}", response_model=ApplicationRead)
-async def update_application_by_id(
+async def update_application(
     application_id: UUID,
     application_update: ApplicationUpdate,
     session: Annotated[Session, Depends(get_session)],
@@ -69,7 +69,7 @@ async def update_application_by_id(
     if application is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Application with ID '{application_id}' not found."
+            detail=f"Application with ID '{application_id}' not found"
         )
 
     updated_application = Application(**application_update.model_dump())
@@ -82,7 +82,7 @@ async def update_application_by_id(
 
 
 @router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_applications_by_user_id(
+async def delete_applications(
     user_id: Annotated[str, Depends(get_current_user_id)],
     session: Annotated[Session, Depends(get_session)]
 ) -> None:
@@ -102,8 +102,8 @@ async def delete_application(
 
     if application_to_delete is None:
         raise HTTPException(
-            status.HTTP_404_NOT_FOUND,
-            f"Application with ID '{application_id}' not found."
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Application with ID '{application_id}' not found"
         )
 
     session.delete(application_to_delete)
