@@ -16,25 +16,29 @@ import {
 } from "@/components/ui/chart";
 import { ChevronRightIcon } from "lucide-react";
 import { Pie, PieChart } from "recharts";
-import { Application } from "./columns";
 
 interface DashboardPieChartProps {
-  chartData: [];
+  title: string;
+  description?: string;
+  chartData: Record<string, string | number>[];
   chartConfig: ChartConfig;
   dataKey: string;
   nameKey: string;
 }
 
-export function DashboardPieChart(
-  dashboardPieChartProps: DashboardPieChartProps,
-) {
-  const { chartData, chartConfig, dataKey, nameKey } = dashboardPieChartProps;
-
+export default function DashboardPieChart({
+  title,
+  description,
+  chartData,
+  chartConfig,
+  dataKey,
+  nameKey,
+}: DashboardPieChartProps) {
   return (
     <Card className="from-primary/15 to-card bg-gradient-to-t">
       <CardHeader>
-        <CardTitle>Applications by Company</CardTitle>
-        <CardDescription>description</CardDescription>
+        <CardTitle>{title}</CardTitle>
+        {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>

@@ -36,7 +36,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function DashboardApplicationsBySubmittedOnChart() {
+export default function DashboardApplicationsBySubmittedOnChart() {
   return (
     <Card>
       <CardHeader>

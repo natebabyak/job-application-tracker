@@ -1,14 +1,8 @@
-import {
-  Application,
-  ApplicationSchema,
-  applicationStatuses,
-} from "@/app/dashboard/columns";
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -32,26 +26,33 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
+import {
+  Application,
+  ApplicationSchema,
+  applicationStatuses,
+} from "./constants";
 
-export function DashboardAddApplicationForm() {
+async function onSubmit(application: Application) {
+  await fetch(`${process.env.BACKEND_URL}/applications`, {
+    method: "POST",
+    headers: {
+      "X-Api-Key": process.env.API_KEY!,
+      "X-User-Id": "temp",
+    },
+    body: JSON.stringify(application),
+  });
+}
+
+export default function DashboardAddApplicationForm() {
   const form = useForm<Application>({
     resolver: zodResolver(ApplicationSchema),
     defaultValues: {
+      position: "",
+      company: "",
       submittedOn: new Date(),
       status: "submitted",
     },
   });
-
-  async function onSubmit(application: Application) {
-    await fetch(`${process.env.BACKEND_URL}/applications`, {
-      method: "POST",
-      headers: {
-        "X-Api-Key": process.env.API_KEY!,
-        "X-User-Id": "temp",
-      },
-      body: JSON.stringify(application),
-    });
-  }
 
   return (
     <Form {...form}>
@@ -62,11 +63,10 @@ export function DashboardAddApplicationForm() {
             name="position"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Position</FormLabel>
+                <FormLabel className="pointer-events-none">Position</FormLabel>
                 <FormControl>
                   <Input placeholder="Software Engineer" {...field} />
                 </FormControl>
-                <FormDescription>Position title</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -76,11 +76,10 @@ export function DashboardAddApplicationForm() {
             name="company"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Company</FormLabel>
+                <FormLabel className="pointer-events-none">Company</FormLabel>
                 <FormControl>
                   <Input placeholder="Apt" {...field} />
                 </FormControl>
-                <FormDescription>Company name</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -91,13 +90,17 @@ export function DashboardAddApplicationForm() {
               name="submittedOn"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Submitted On</FormLabel>
+                  <FormLabel className="pointer-events-none">
+                    Submitted on
+                  </FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button variant="outline">
                           <span className="font-normal">
-                            {field.value.toDateString()}
+                            {field.value
+                              ? field.value.toLocaleDateString()
+                              : "Select date"}
                           </span>
                           <CalendarIcon className="ml-auto opacity-50" />
                         </Button>
@@ -105,7 +108,8 @@ export function DashboardAddApplicationForm() {
                     </PopoverTrigger>
                     <PopoverContent
                       align="start"
-                      className="pointer-events-auto w-auto p-0"
+                      side="bottom"
+                      className="w-auto p-0"
                     >
                       <Calendar
                         mode="single"
@@ -115,6 +119,7 @@ export function DashboardAddApplicationForm() {
                           date > new Date() || date < new Date("1900-01-01")
                         }
                         captionLayout="dropdown"
+                        className="pointer-events-auto"
                       />
                     </PopoverContent>
                   </Popover>
@@ -127,7 +132,7 @@ export function DashboardAddApplicationForm() {
               name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Status</FormLabel>
+                  <FormLabel className="pointer-events-none">Status</FormLabel>
                   <Select
                     defaultValue={field.value}
                     onValueChange={field.onChange}
@@ -137,12 +142,17 @@ export function DashboardAddApplicationForm() {
                         <SelectValue />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    <SelectContent align="start" side="bottom">
                       <SelectGroup>
                         <SelectLabel>Statuses</SelectLabel>
-                        {applicationStatuses.map((s) => (
-                          <SelectItem key={s} value={s}>
-                            <span className="capitalize">{s}</span>
+                        {applicationStatuses.map((applicationStatus) => (
+                          <SelectItem
+                            key={applicationStatus}
+                            value={applicationStatus}
+                          >
+                            <span className="capitalize">
+                              {applicationStatus}
+                            </span>
                           </SelectItem>
                         ))}
                       </SelectGroup>

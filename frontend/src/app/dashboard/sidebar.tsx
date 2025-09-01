@@ -28,9 +28,15 @@ import {
 import { signOut } from "next-auth/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTheme } from "next-themes";
-import { DashboardAddApplicationButton } from "./add-application-button";
+import DialogDrawer from "./dialog-drawer";
+import { Button } from "@/components/ui/button";
+import AddApplicationForm from "./add-application-form";
 
-export function DashboardSidebar({ session }: { session: Session | null }) {
+export default function DashboardSidebar({
+  session,
+}: {
+  session: Session | null;
+}) {
   const { theme, setTheme } = useTheme();
 
   return (
@@ -43,7 +49,12 @@ export function DashboardSidebar({ session }: { session: Session | null }) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarHeader>
-          <DashboardAddApplicationButton />
+          <DialogDrawer
+            trigger={<Button>Add application</Button>}
+            title="Add application"
+            content={<AddApplicationForm />}
+            form="add-application-form"
+          />
         </SidebarHeader>
         <SidebarGroup>
           <SidebarGroupLabel>Filters</SidebarGroupLabel>
@@ -58,54 +69,20 @@ export function DashboardSidebar({ session }: { session: Session | null }) {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <Avatar>
-                    <AvatarImage src={session?.user?.image ?? undefined} />
-                    <AvatarFallback>
-                      <Skeleton />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="grid">
-                    {session ? (
-                      <span className="text-sm">{session.user?.name}</span>
-                    ) : (
-                      <Skeleton />
-                    )}
-                    {session ? (
-                      <span className="text-xs">{session.user?.email}</span>
-                    ) : (
-                      <Skeleton />
-                    )}
-                  </div>
+                  <User session={session} />
                   <EllipsisIcon className="size-4" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="right">
                 <DropdownMenuLabel className="flex">
-                  <Avatar>
-                    <AvatarImage src={session?.user?.image ?? undefined} />
-                    <AvatarFallback>
-                      <Skeleton />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="grid">
-                    {session ? (
-                      <span>{session?.user?.name}</span>
-                    ) : (
-                      <Skeleton />
-                    )}
-                    {session ? (
-                      <span>{session?.user?.email}</span>
-                    ) : (
-                      <Skeleton />
-                    )}
-                  </div>
+                  <User session={session} />
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuRadioGroup onValueChange={setTheme} value={theme}>
                   <DropdownMenuLabel>Theme</DropdownMenuLabel>
-                  {["dark", "light", "system"].map((t) => (
-                    <DropdownMenuRadioItem key={t} value={t}>
-                      <span className="capitalize">{t}</span>
+                  {["dark", "light", "system"].map((theme) => (
+                    <DropdownMenuRadioItem key={theme} value={theme}>
+                      <span className="capitalize">{theme}</span>
                     </DropdownMenuRadioItem>
                   ))}
                 </DropdownMenuRadioGroup>
@@ -120,5 +97,30 @@ export function DashboardSidebar({ session }: { session: Session | null }) {
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
+  );
+}
+
+function User({ session }: { session: Session | null }) {
+  return (
+    <div className="flex">
+      <Avatar>
+        <AvatarImage src={session?.user?.image ?? undefined} />
+        <AvatarFallback>
+          <Skeleton />
+        </AvatarFallback>
+      </Avatar>
+      <div className="flex flex-col">
+        {session ? (
+          <span className="text-sm">{session.user?.name}</span>
+        ) : (
+          <Skeleton />
+        )}
+        {session ? (
+          <span className="text-xs">{session.user?.email}</span>
+        ) : (
+          <Skeleton />
+        )}
+      </div>
+    </div>
   );
 }

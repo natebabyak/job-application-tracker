@@ -36,16 +36,18 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
-interface DataTableProps<TData, TValue> {
+interface DashboardTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function DashboardTable<TData, TValue>({
+export default function DashboardTable<TData, TValue>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
+  className,
+}: DashboardTableProps<TData, TValue> & { className?: string }) {
   const [globalFilter, setGlobalFilter] = useState([]);
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -66,7 +68,7 @@ export function DashboardTable<TData, TValue>({
   });
 
   return (
-    <div className="p-8">
+    <div className={cn("grid gap-4", className)}>
       <div className="flex items-center">
         <Input
           onChange={(e) => table.setGlobalFilter(String(e.target.value))}
