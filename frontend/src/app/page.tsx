@@ -1,12 +1,10 @@
 import { AptIcon } from "@/components/icons/apt";
+import { Button } from "@/components/ui/button";
+import { DiscordIcon } from "@/components/icons/discord";
+import { GithubIcon } from "@/components/icons/github";
 import Link from "next/link";
 import { Metadata } from "next";
-import { GithubIcon } from "@/components/icons/github";
-import { Button } from "@/components/ui/button";
-import ThemeMenu from "../components/home/theme-menu";
-import SignInButtons from "../components/home/sign-in-buttons";
 import { signIn } from "@/auth";
-import { DiscordIcon } from "@/components/icons/discord";
 
 export const metadata: Metadata = {
   title:
@@ -15,7 +13,7 @@ export const metadata: Metadata = {
 
 const year = new Date().getFullYear();
 
-export default async function Home() {
+export default async function Page() {
   return (
     <>
       <header className="fixed flex w-full justify-between p-4 backdrop-blur-md">
@@ -23,14 +21,11 @@ export default async function Home() {
           <AptIcon className="size-6" />
           <h1 className="text-2xl font-bold select-none">Apt</h1>
         </Link>
-        <div className="flex items-center gap-2">
+        <a href="https://github.com/natebabyak/job-application-tracker">
           <Button size="icon" variant="ghost">
-            <a href="https://github.com/natebabyak/job-application-tracker">
-              <GithubIcon />
-            </a>
+            <GithubIcon />
           </Button>
-          <ThemeMenu />
-        </div>
+        </a>
       </header>
       <main className="flex min-h-svh flex-col items-center pt-16">
         <h1 className="px-4 text-center text-4xl leading-normal font-bold text-balance md:line-clamp-3 md:px-0 md:text-5xl lg:line-clamp-2 lg:text-6xl">

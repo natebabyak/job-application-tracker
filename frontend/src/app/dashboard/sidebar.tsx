@@ -1,39 +1,36 @@
 "use client";
 
-import { EllipsisIcon } from "lucide-react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+import { AptIcon } from "@/components/icons/apt";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useTheme } from "next-themes";
-import { AptIcon } from "@/components/icons/apt";
+import { EllipsisIcon, LogOutIcon } from "lucide-react";
 import { Session } from "next-auth";
-import DashboardSidebarDialog from "./dialog";
-import SignOutButton from "./sign-out-button";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
+import { signOut } from "next-auth/react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useTheme } from "next-themes";
+import { DashboardAddApplicationButton } from "./add-application-button";
 
-export default function DashboardSidebar({
-  session,
-}: {
-  session: Session | null;
-}) {
+export function DashboardSidebar({ session }: { session: Session | null }) {
   const { theme, setTheme } = useTheme();
 
   return (
@@ -46,11 +43,12 @@ export default function DashboardSidebar({
       </SidebarHeader>
       <SidebarContent>
         <SidebarHeader>
-          <DashboardSidebarDialog />
+          <DashboardAddApplicationButton />
         </SidebarHeader>
         <SidebarGroup>
+          <SidebarGroupLabel>Filters</SidebarGroupLabel>
           <SidebarMenu>
-            <SidebarMenuButton>d</SidebarMenuButton>
+            <SidebarMenuButton>Add application</SidebarMenuButton>
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
@@ -68,12 +66,12 @@ export default function DashboardSidebar({
                   </Avatar>
                   <div className="grid">
                     {session ? (
-                      <span>{session?.user?.name}</span>
+                      <span className="text-sm">{session.user?.name}</span>
                     ) : (
                       <Skeleton />
                     )}
                     {session ? (
-                      <span>{session?.user?.email}</span>
+                      <span className="text-xs">{session.user?.email}</span>
                     ) : (
                       <Skeleton />
                     )}
@@ -105,20 +103,17 @@ export default function DashboardSidebar({
                 <DropdownMenuSeparator />
                 <DropdownMenuRadioGroup onValueChange={setTheme} value={theme}>
                   <DropdownMenuLabel>Theme</DropdownMenuLabel>
-                  <DropdownMenuRadioItem value="dark">
-                    Dark
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="light">
-                    Light
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="system">
-                    System
-                  </DropdownMenuRadioItem>
+                  {["dark", "light", "system"].map((t) => (
+                    <DropdownMenuRadioItem key={t} value={t}>
+                      <span className="capitalize">{t}</span>
+                    </DropdownMenuRadioItem>
+                  ))}
                 </DropdownMenuRadioGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <SignOutButton />
-                </DropdownMenuGroup>
+                <DropdownMenuItem onClick={() => signOut()}>
+                  <LogOutIcon />
+                  Sign out
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>

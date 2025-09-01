@@ -2,7 +2,6 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   DropdownMenu,
@@ -19,7 +18,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { z } from "zod";
-import DashboardTableHeader from "../../components/dashboard/table-header";
+import { DashboardTableHeader } from "./table-header";
 
 export const applicationStatuses = [
   "accepted",
@@ -42,28 +41,6 @@ export const ApplicationSchema = z.object({
 export type Application = z.infer<typeof ApplicationSchema>;
 
 export const columns: ColumnDef<Application>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
   {
     accessorKey: "position",
     header: ({ column }) => (
@@ -93,22 +70,12 @@ export const columns: ColumnDef<Application>[] = [
       return (
         <Select>
           <SelectTrigger>
-            <Badge
-              variant={
-                status === "accepted" || status === "offered"
-                  ? "default"
-                  : status === "declined" || status === "rejected"
-                    ? "destructive"
-                    : "secondary"
-              }
-            >
-              {status}
-            </Badge>
+            <Badge>{status}</Badge>
           </SelectTrigger>
           <SelectContent>
-            {applicationStatuses.map((status) => (
-              <SelectItem key={status} value={status}>
-                <span className="capitalize">{status}</span>
+            {applicationStatuses.map((s) => (
+              <SelectItem key={s} value={s}>
+                <span className="capitalize">{s}</span>
               </SelectItem>
             ))}
           </SelectContent>

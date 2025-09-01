@@ -19,7 +19,7 @@ interface DashboardTableHeaderProps<TData, TValue> {
   title: string;
 }
 
-export default function DashboardTableHeader<TData, TValue>({
+export function DashboardTableHeader<TData, TValue>({
   column,
   title,
 }: DashboardTableHeaderProps<TData, TValue>) {

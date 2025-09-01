@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/chart";
 import { ChevronRightIcon } from "lucide-react";
 import { Pie, PieChart } from "recharts";
+import { Application } from "./columns";
 
 interface DashboardPieChartProps {
   chartData: [];
@@ -24,7 +25,7 @@ interface DashboardPieChartProps {
   nameKey: string;
 }
 
-export default function DashboardPieChart(
+export function DashboardPieChart(
   dashboardPieChartProps: DashboardPieChartProps,
 ) {
   const { chartData, chartConfig, dataKey, nameKey } = dashboardPieChartProps;

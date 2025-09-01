@@ -10,38 +10,43 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { auth } from "@/auth";
-import DashboardSidebar from "../../components/dashboard/sidebar";
 import { Metadata } from "next";
-import DashboardTable from "@/components/dashboard/table";
-import { columns } from "./columns";
-import { NextResponse } from "next/server";
+import { Application, columns } from "./columns";
 import { redirect } from "next/navigation";
+import { DashboardSidebar } from "./sidebar";
+import { DashboardTable } from "./table";
+import { DashboardPieChart } from "./pie-chart";
+import { DashboardApplicationsBySubmittedOnChart } from "./applications-by-submitted-on-chart";
 
 export const metadata: Metadata = {
   title: "Dashboard - Apt",
 };
 
-export default async function Dashboard() {
+function getApiKey() {
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) throw new Error("API key is undefined");
+  return apiKey;
+}
+
+export default async function Page() {
   const session = await auth();
   if (!session) redirect("/");
 
-  const apiKey = process.env.API_KEY;
-  if (!apiKey) throw new Error("API key is undefined");
-
-  const userId = session.user?.id;
-  if (!userId) throw new Error("User ID is undefined");
+  function getUserId() {
+    const userId = session?.user?.id;
+    if (!userId) throw new Error("User ID is undefined");
+    return userId;
+  }
 
   const response = await fetch(`${process.env.BACKEND_URL}/applications/me`, {
     method: "GET",
     headers: {
-      "X-Api-Key": apiKey,
-      "X-User-Id": userId,
+      "X-Api-Key": getApiKey(),
+      "X-User-Id": getUserId(),
     },
   });
 
-  if (!response.ok) throw new Error("Failed to fetch applications");
-
-  const applications = await response.json();
+  const applications: Application[] = await response.json();
 
   return (
     <SidebarProvider>
@@ -57,7 +62,15 @@ export default async function Dashboard() {
           <Separator orientation="vertical" />
         </div>
         <Separator />
-        <DashboardTable columns={columns} data={applications} />
+        <div className="grid gap-4">
+          <div className="grid grid-cols-3 gap-4">
+            <DashboardPieChart />
+            <DashboardPieChart />
+            <DashboardPieChart />
+          </div>
+          <DashboardApplicationsBySubmittedOnChart />
+          <DashboardTable columns={columns} data={applications} />
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );
