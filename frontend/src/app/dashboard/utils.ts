@@ -1,4 +1,6 @@
-import { Session } from "next-auth";
+import { auth } from "@/auth";
+
+const session = await auth();
 
 export function getApiKey() {
   const apiKey = process.env.API_KEY;
@@ -18,7 +20,7 @@ export function getFrontendUrl() {
   return frontendUrl;
 }
 
-export function getUserId(session: Session | null) {
+export function getUserId() {
   const userId = session?.user?.id;
   if (!userId) throw new Error("User ID is undefined");
   return userId;

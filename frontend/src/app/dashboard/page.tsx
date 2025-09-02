@@ -37,7 +37,7 @@ export default async function Page() {
     method: "GET",
     headers: {
       "X-Api-Key": getApiKey(),
-      "X-User-Id": getUserId(session),
+      "X-User-Id": getUserId(),
     },
   });
 
@@ -73,18 +73,20 @@ export default async function Page() {
           <div className="grid grid-cols-3 gap-8">
             <PieChart
               title="Applications by Status"
-              chartData={Object.entries(counts.statuses).map((s) => {
-                return { status: s[0], applications: s[1] };
+              chartData={Object.entries(counts.statuses).map((status) => {
+                return { status: status[0], applications: status[1] };
               })}
               chartConfig={
                 {
                   applications: { label: "Applications" },
                   ...Object.fromEntries(
-                    applicationStatuses.map((s, i) => [
-                      s,
+                    applicationStatuses.map((applicationStatus, index) => [
+                      applicationStatus,
                       {
-                        label: s[0].toUpperCase() + s.slice(1),
-                        color: `var(--chart-${i})`,
+                        label:
+                          applicationStatus[0].toUpperCase() +
+                          applicationStatus.slice(1),
+                        color: `var(--chart-${index})`,
                       },
                     ]),
                   ),
@@ -95,18 +97,20 @@ export default async function Page() {
             />
             <PieChart
               title="Applications by Status"
-              chartData={Object.entries(counts.statuses).map((s) => {
-                return { status: s[0], applications: s[1] };
+              chartData={Object.entries(counts.statuses).map((status) => {
+                return { status: status[0], applications: status[1] };
               })}
               chartConfig={
                 {
                   applications: { label: "Applications" },
                   ...Object.fromEntries(
-                    applicationStatuses.map((s, i) => [
-                      s,
+                    applicationStatuses.map((applicationStatus, index) => [
+                      applicationStatus,
                       {
-                        label: s[0].toUpperCase() + s.slice(1),
-                        color: `var(--chart-${i})`,
+                        label:
+                          applicationStatus[0].toUpperCase() +
+                          applicationStatus.slice(1),
+                        color: `var(--chart-${index})`,
                       },
                     ]),
                   ),
@@ -117,18 +121,20 @@ export default async function Page() {
             />
             <PieChart
               title="Applications by Status"
-              chartData={Object.entries(counts.statuses).map((s) => {
-                return { status: s[0], applications: s[1] };
+              chartData={Object.entries(counts.statuses).map((status) => {
+                return { status: status[0], applications: status[1] };
               })}
               chartConfig={
                 {
                   applications: { label: "Applications" },
                   ...Object.fromEntries(
-                    applicationStatuses.map((s, i) => [
-                      s,
+                    applicationStatuses.map((applicationStatus, index) => [
+                      applicationStatus,
                       {
-                        label: s[0].toUpperCase() + s.slice(1),
-                        color: `var(--chart-${i})`,
+                        label:
+                          applicationStatus[0].toUpperCase() +
+                          applicationStatus.slice(1),
+                        color: `var(--chart-${index})`,
                       },
                     ]),
                   ),

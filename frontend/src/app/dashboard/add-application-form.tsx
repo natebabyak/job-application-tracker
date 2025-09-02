@@ -31,13 +31,17 @@ import {
   ApplicationSchema,
   applicationStatuses,
 } from "./constants";
+import { getApiKey, getBackendUrl, getUserId } from "./utils";
+import useSWR from "swr";
+
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 async function onSubmit(application: Application) {
-  await fetch(`${process.env.BACKEND_URL}/applications`, {
+  await fetch(`${getBackendUrl()}/applications`, {
     method: "POST",
     headers: {
-      "X-Api-Key": process.env.API_KEY!,
-      "X-User-Id": "temp",
+      "X-Api-Key": getApiKey(),
+      "X-User-Id": getUserId(),
     },
     body: JSON.stringify(application),
   });
@@ -54,10 +58,15 @@ export default function DashboardAddApplicationForm() {
     },
   });
 
+  const { data, error } = useSWR(`${getBackendUrl()}/applications`, fetcher);
+
+  if (error) return <div>Failed to load</div>;
+  if (!data) return <div>Loading...</div>;
+
   return (
     <Form {...form}>
       <form id="add-application-form" onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="grid gap-4">
+        <div className="grid gap-4 px-4 md:px-0">
           <FormField
             control={form.control}
             name="position"
