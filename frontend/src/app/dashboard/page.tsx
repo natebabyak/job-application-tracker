@@ -22,8 +22,8 @@ import {
   applicationStatuses,
 } from "./constants";
 import { ChartConfig } from "@/components/ui/chart";
-import { getApiKey, getUserId } from "./utils";
 import { columns } from "./columns";
+import jwt from "jsonwebtoken";
 
 export const metadata: Metadata = {
   title: "Dashboard - Apt",
@@ -33,14 +33,14 @@ export default async function Page() {
   const session = await auth();
   if (!session) redirect("/");
 
-  const response = await fetch(`${process.env.BACKEND_URL}/applications/me`, {
-    method: "GET",
-    headers: {
-      "X-Api-Key": getApiKey(),
-      "X-User-Id": getUserId(),
-    },
+  const token = jwt.sign({ sub: session.user?.id }, process.env.JWT_SECRET!, {
+    algorithm: "HS256",
+    expiresIn: "1m",
   });
 
+  const response = await fetch(`${process.env.BACKEND_URL}/applications/me`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   const applications: Application[] = await response.json();
 
   const counts = {

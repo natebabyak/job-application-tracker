@@ -31,21 +31,6 @@ import {
   ApplicationSchema,
   applicationStatuses,
 } from "./constants";
-import { getApiKey, getBackendUrl, getUserId } from "./utils";
-import useSWR from "swr";
-
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
-
-async function onSubmit(application: Application) {
-  await fetch(`${getBackendUrl()}/applications`, {
-    method: "POST",
-    headers: {
-      "X-Api-Key": getApiKey(),
-      "X-User-Id": getUserId(),
-    },
-    body: JSON.stringify(application),
-  });
-}
 
 export default function DashboardAddApplicationForm() {
   const form = useForm<Application>({
@@ -58,10 +43,12 @@ export default function DashboardAddApplicationForm() {
     },
   });
 
-  const { data, error } = useSWR(`${getBackendUrl()}/applications`, fetcher);
-
-  if (error) return <div>Failed to load</div>;
-  if (!data) return <div>Loading...</div>;
+  async function onSubmit(application: Application) {
+    await fetch("/api/applications", {
+      method: "POST",
+      body: JSON.stringify(application),
+    });
+  }
 
   return (
     <Form {...form}>
