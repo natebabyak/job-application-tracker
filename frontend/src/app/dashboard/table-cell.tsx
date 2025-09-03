@@ -13,11 +13,15 @@ export function DashboardTableCell({ text }: DashboardTableCellProps) {
   const handleClick = () => {
     navigator.clipboard.writeText(text);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 3000);
   };
 
   return (
-    <Button onClick={handleClick} variant="ghost" className="group">
+    <Button
+      onClick={handleClick}
+      variant="ghost"
+      className="group hover:bg-background!"
+    >
       {text}
       <div className="relative ml-2 size-4 opacity-0 transition-opacity group-hover:opacity-100">
         <CopyIcon

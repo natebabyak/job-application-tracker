@@ -18,7 +18,7 @@ export function ThemeButton() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
         <Button size="icon" variant="ghost">
           <SunIcon className="scale-100 transition-all dark:scale-0" />
           <MoonIcon className="absolute scale-0 transition-all dark:scale-100" />

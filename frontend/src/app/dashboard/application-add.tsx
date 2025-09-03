@@ -60,6 +60,8 @@ interface DashboardApplicationAddProps {
 export function DashboardApplicationAdd({
   multi,
 }: DashboardApplicationAddProps) {
+  const title = `Add Application${multi && "s"}`;
+
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
   const router = useRouter();
@@ -80,13 +82,18 @@ export function DashboardApplicationAdd({
       submitted_on: values.submitted_on.toISOString().slice(0, 10),
     };
 
-    await fetch("/api/applications", {
+    const response = await fetch("/api/applications", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(application),
     });
+
+    if (!response.ok) {
+      throw new Error("Something went wrong");
+    }
+
     router.refresh();
 
     form.reset();
@@ -99,15 +106,11 @@ export function DashboardApplicationAdd({
   return isMobile ? (
     <Drawer onOpenChange={setOpen} open={open}>
       <DrawerTrigger asChild>
-        <Button variant={multi ? "outline" : "default"}>
-          Add application{multi && "s"}
-        </Button>
+        <Button variant={multi ? "outline" : "default"}>{title}</Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle className="justify-start">
-            Add application{multi && "s"}
-          </DrawerTitle>
+          <DrawerTitle className="justify-start">{title}</DrawerTitle>
         </DrawerHeader>
         <ApplicationAddForm />
         <DrawerFooter className="flex justify-end gap-2">
@@ -123,13 +126,11 @@ export function DashboardApplicationAdd({
   ) : (
     <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>
-        <Button variant={multi ? "outline" : "default"}>
-          Add application{multi && "s"}
-        </Button>
+        <Button variant={multi ? "outline" : "default"}>{title}</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add application{multi && "s"}</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         <ApplicationAddForm />
         <DialogFooter className="flex justify-end gap-2">

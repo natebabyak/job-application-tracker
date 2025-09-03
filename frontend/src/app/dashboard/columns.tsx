@@ -1,22 +1,13 @@
 "use client";
 
-import { Edit2Icon, EllipsisIcon } from "lucide-react";
 import { ApplicationReceive } from "./constants";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { DashboardTableHeader } from "./table-header";
 import { DashboardTableCell } from "./table-cell";
 import { DashboardApplicationDelete } from "./application-delete";
+import { DashboardApplicationEdit } from "./application-edit";
 
 export const columns: ColumnDef<ApplicationReceive>[] = [
   {
@@ -94,23 +85,9 @@ export const columns: ColumnDef<ApplicationReceive>[] = [
   {
     id: "actions",
     cell: ({ row }) => (
-      <div className="flex justify-end">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button size="icon" variant="outline">
-              <EllipsisIcon />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" side="top">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Edit2Icon />
-              Edit application
-            </DropdownMenuItem>
-            <DashboardApplicationDelete application={row.original} />
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <div className="flex justify-end gap-2">
+        <DashboardApplicationEdit />
+        <DashboardApplicationDelete application={row.original} />
       </div>
     ),
     enableSorting: false,
