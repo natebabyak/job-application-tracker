@@ -1,10 +1,10 @@
 import { AptIcon } from "@/components/icons/apt";
 import { Button } from "@/components/ui/button";
-import { DiscordIcon } from "@/components/icons/discord";
 import { GithubIcon } from "@/components/icons/github";
 import Link from "next/link";
 import { Metadata } from "next";
-import { signIn } from "@/auth";
+import { SignInButtons } from "./sign-in-buttons";
+import { ThemeButton } from "./theme-button";
 
 export const metadata: Metadata = {
   title:
@@ -21,41 +21,23 @@ export default async function Page() {
           <AptIcon className="size-6" />
           <h1 className="text-2xl font-bold select-none">Apt</h1>
         </Link>
-        <a href="https://github.com/natebabyak/job-application-tracker">
-          <Button size="icon" variant="ghost">
-            <GithubIcon />
-          </Button>
-        </a>
+        <div className="flex">
+          <a href="https://github.com/natebabyak/job-application-tracker">
+            <Button size="icon" variant="ghost" className="cursor-pointer">
+              <GithubIcon />
+            </Button>
+          </a>
+          <ThemeButton />
+        </div>
       </header>
-      <main className="flex min-h-svh flex-col items-center pt-16">
+      <main className="flex min-h-svh flex-col items-center gap-4 pt-16">
         <h1 className="px-4 text-center text-4xl leading-normal font-bold text-balance md:line-clamp-3 md:px-0 md:text-5xl lg:line-clamp-2 lg:text-6xl">
           Track and optimize your job search from a single, powerful dashboard
         </h1>
         <p className="text-center text-lg font-medium text-balance">
           Join now and stay on top of your job search.
         </p>
-        <form
-          action={async () => {
-            "use server";
-            await signIn("github", { redirectTo: "/dashboard" });
-          }}
-        >
-          <Button type="submit">
-            <GithubIcon />
-            Sign in with GitHub
-          </Button>
-        </form>
-        <form
-          action={async () => {
-            "use server";
-            await signIn("discord", { redirectTo: "/dashboard" });
-          }}
-        >
-          <Button type="submit" variant="outline">
-            <DiscordIcon />
-            Sign in with Discord
-          </Button>
-        </form>
+        <SignInButtons />
       </main>
       <footer className="w-full p-4">
         <p className="text-center text-balance">

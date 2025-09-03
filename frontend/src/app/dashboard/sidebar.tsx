@@ -28,13 +28,13 @@ import {
 import { signOut } from "next-auth/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTheme } from "next-themes";
-import { DashboardAddApplication } from "./add-application";
+import { DashboardApplicationAdd } from "./application-add";
 
-export default function DashboardSidebar({
-  session,
-}: {
-  session: Session | null;
-}) {
+interface DashboardSidebarProps {
+  session: Session;
+}
+
+export function DashboardSidebar({ session }: DashboardSidebarProps) {
   const { theme, setTheme } = useTheme();
 
   return (
@@ -47,8 +47,8 @@ export default function DashboardSidebar({
       </SidebarHeader>
       <SidebarContent>
         <SidebarHeader>
-          <DashboardAddApplication multi={false} />
-          <DashboardAddApplication multi={true} />
+          <DashboardApplicationAdd multi={false} />
+          <DashboardApplicationAdd multi={true} />
         </SidebarHeader>
         <SidebarGroup>
           <SidebarGroupLabel>Filters</SidebarGroupLabel>
@@ -63,13 +63,51 @@ export default function DashboardSidebar({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User session={session} />
+                  <div className="flex">
+                    <Avatar>
+                      <AvatarImage src={session?.user?.image ?? undefined} />
+                      <AvatarFallback>
+                        <Skeleton />
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      {session ? (
+                        <span className="text-sm">{session.user?.name}</span>
+                      ) : (
+                        <Skeleton />
+                      )}
+                      {session ? (
+                        <span className="text-xs">{session.user?.email}</span>
+                      ) : (
+                        <Skeleton />
+                      )}
+                    </div>
+                  </div>
                   <EllipsisIcon className="size-4" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="right">
                 <DropdownMenuLabel className="flex">
-                  <User session={session} />
+                  <div className="flex">
+                    <Avatar>
+                      <AvatarImage src={session?.user?.image ?? undefined} />
+                      <AvatarFallback>
+                        <Skeleton />
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      {session ? (
+                        <span className="text-sm">{session.user?.name}</span>
+                      ) : (
+                        <Skeleton />
+                      )}
+                      {session ? (
+                        <span className="text-xs">{session.user?.email}</span>
+                      ) : (
+                        <Skeleton />
+                      )}
+                    </div>
+                  </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuRadioGroup onValueChange={setTheme} value={theme}>
@@ -91,30 +129,5 @@ export default function DashboardSidebar({
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
-  );
-}
-
-function User({ session }: { session: Session | null }) {
-  return (
-    <div className="flex">
-      <Avatar>
-        <AvatarImage src={session?.user?.image ?? undefined} />
-        <AvatarFallback>
-          <Skeleton />
-        </AvatarFallback>
-      </Avatar>
-      <div className="flex flex-col">
-        {session ? (
-          <span className="text-sm">{session.user?.name}</span>
-        ) : (
-          <Skeleton />
-        )}
-        {session ? (
-          <span className="text-xs">{session.user?.email}</span>
-        ) : (
-          <Skeleton />
-        )}
-      </div>
-    </div>
   );
 }

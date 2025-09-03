@@ -1,3 +1,4 @@
+import { ApplicationReceive } from "./constants";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,28 +18,33 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { Trash2Icon } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { Trash2Icon } from "lucide-react";
 
-interface DashboardDeleteApplicationProps {
-  position: string;
-  company: string;
+interface DashboardApplicationDeleteProps {
+  application: ApplicationReceive;
 }
 
-export function DashboardDeleteApplication({
-  position,
-  company,
-}: DashboardDeleteApplicationProps) {
+export function DashboardApplicationDelete({
+  application: { position, company, id },
+}: DashboardApplicationDeleteProps) {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
-  const handleClick = () => {
-    setOpen(false);
+  const handleClick = async () => {
+    const response = await fetch(`/api/applications/${id}`, {
+      method: "DELETE",
+    });
 
+    if (!response.ok) {
+      throw new Error("Something went wrong");
+    }
+
+    setOpen(false);
     router.refresh();
   };
 
@@ -63,7 +69,9 @@ export function DashboardDeleteApplication({
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
           </DrawerClose>
-          <Button variant="destructive">Confirm</Button>
+          <Button onClick={handleClick} variant="destructive">
+            Confirm
+          </Button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

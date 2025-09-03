@@ -26,4 +26,6 @@ export const ApplicationSchema = z.object({
   status: z.enum(applicationStatuses),
 });
 
-export type Application = z.infer<typeof ApplicationSchema>;
+export type ApplicationSend = z.infer<typeof ApplicationSchema>;
+
+export type ApplicationReceive = ApplicationSend & { id: string };

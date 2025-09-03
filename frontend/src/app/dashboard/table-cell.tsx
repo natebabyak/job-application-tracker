@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { CheckIcon, CopyIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CheckIcon, CopyIcon } from "lucide-react";
 import { useState } from "react";
 
 interface DashboardTableCellProps {

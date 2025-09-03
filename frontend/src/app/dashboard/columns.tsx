@@ -1,12 +1,11 @@
 "use client";
 
-import { Application } from "./constants";
+import { Edit2Icon, EllipsisIcon } from "lucide-react";
+import { ApplicationReceive } from "./constants";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
-import { DashboardTableCell } from "./table-cell";
-import { DashboardTableHeader } from "./table-header";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,10 +14,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Edit2Icon, EllipsisIcon } from "lucide-react";
-import { DashboardDeleteApplication } from "./delete-application";
+import { DashboardTableHeader } from "./table-header";
+import { DashboardTableCell } from "./table-cell";
+import { DashboardApplicationDelete } from "./application-delete";
 
-export const columns: ColumnDef<Application>[] = [
+export const columns: ColumnDef<ApplicationReceive>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -108,10 +108,7 @@ export const columns: ColumnDef<Application>[] = [
               <Edit2Icon />
               Edit application
             </DropdownMenuItem>
-            <DashboardDeleteApplication
-              position={row.original.position}
-              company={row.original.company}
-            />
+            <DashboardApplicationDelete application={row.original} />
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

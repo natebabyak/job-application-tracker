@@ -12,13 +12,16 @@ import {
 import { auth } from "@/auth";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import Sidebar from "./sidebar";
 import jwt from "jsonwebtoken";
 import { DashboardApplicationsBySubmittedOnChart } from "./applications-by-submitted-on-chart";
-import { Application, ApplicationStatus } from "@/app/dashboard/constants";
+import {
+  ApplicationReceive,
+  ApplicationStatus,
+} from "@/app/dashboard/constants";
 import { DashboardTable } from "./table";
 import { columns } from "./columns";
 import { DashboardPieChart } from "./pie-chart";
+import { DashboardSidebar } from "./sidebar";
 
 export const metadata: Metadata = {
   title: "Dashboard - Apt",
@@ -38,7 +41,7 @@ export default async function Page() {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  const applications = ((await response.json()) as Application[]) ?? [];
+  const applications = ((await response.json()) as ApplicationReceive[]) ?? [];
 
   const counts = {
     positions: {} as Record<string, number>,
@@ -86,7 +89,7 @@ export default async function Page() {
 
   return (
     <SidebarProvider>
-      <Sidebar session={session} />
+      <DashboardSidebar session={session} />
       <SidebarInset>
         <div className="flex items-center gap-2 p-2">
           <Tooltip>

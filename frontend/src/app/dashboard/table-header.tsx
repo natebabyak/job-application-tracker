@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-interface TableHeaderProps<TData, TValue> {
+interface DashboardTableHeaderProps<TData, TValue> {
   column: Column<TData, TValue>;
   title: string;
 }
@@ -22,7 +22,7 @@ interface TableHeaderProps<TData, TValue> {
 export function DashboardTableHeader<TData, TValue>({
   column,
   title,
-}: TableHeaderProps<TData, TValue>) {
+}: DashboardTableHeaderProps<TData, TValue>) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -37,7 +37,7 @@ export function DashboardTableHeader<TData, TValue>({
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
+      <DropdownMenuContent align="start" side="bottom">
         <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
           <ArrowUpIcon />
           Sort asc.

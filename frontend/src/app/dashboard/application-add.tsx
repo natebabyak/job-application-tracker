@@ -1,6 +1,6 @@
 import {
-  Application,
   ApplicationSchema,
+  ApplicationSend,
   applicationStatuses,
 } from "@/app/dashboard/constants";
 import { Button } from "@/components/ui/button";
@@ -53,14 +53,18 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const FORM_ID = "add-application-form";
+interface DashboardApplicationAddProps {
+  multi: boolean;
+}
 
-export function DashboardAddApplication({ multi }: { multi: boolean }) {
+export function DashboardApplicationAdd({
+  multi,
+}: DashboardApplicationAddProps) {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
-  const form = useForm<Application>({
+  const form = useForm<ApplicationSend>({
     resolver: zodResolver(ApplicationSchema),
     defaultValues: {
       position: "",
@@ -70,7 +74,7 @@ export function DashboardAddApplication({ multi }: { multi: boolean }) {
     },
   });
 
-  async function onSubmit(values: Application) {
+  async function onSubmit(values: ApplicationSend) {
     const application = {
       ...values,
       submitted_on: values.submitted_on.toISOString().slice(0, 10),
@@ -83,11 +87,8 @@ export function DashboardAddApplication({ multi }: { multi: boolean }) {
       },
       body: JSON.stringify(application),
     });
-
-    // Refresh data
     router.refresh();
 
-    // Reset form
     form.reset();
 
     if (!multi) {
@@ -108,12 +109,12 @@ export function DashboardAddApplication({ multi }: { multi: boolean }) {
             Add application{multi && "s"}
           </DrawerTitle>
         </DrawerHeader>
-        <DashboardAddApplicationForm />
-        <DrawerFooter className="flex justify-end gap-4">
+        <ApplicationAddForm />
+        <DrawerFooter className="flex justify-end gap-2">
           <DrawerClose asChild>
             <Button variant="outline">{multi ? "Done" : "Cancel"}</Button>
           </DrawerClose>
-          <Button form={FORM_ID} type="submit">
+          <Button form="application-add" type="submit">
             Submit
           </Button>
         </DrawerFooter>
@@ -130,12 +131,12 @@ export function DashboardAddApplication({ multi }: { multi: boolean }) {
         <DialogHeader>
           <DialogTitle>Add application{multi && "s"}</DialogTitle>
         </DialogHeader>
-        <DashboardAddApplicationForm />
-        <DialogFooter className="flex justify-end gap-4">
+        <ApplicationAddForm />
+        <DialogFooter className="flex justify-end gap-2">
           <DialogClose asChild>
             <Button variant="outline">{multi ? "Done" : "Cancel"}</Button>
           </DialogClose>
-          <Button form={FORM_ID} type="submit">
+          <Button form="application-add" type="submit">
             Submit
           </Button>
         </DialogFooter>
@@ -143,10 +144,10 @@ export function DashboardAddApplication({ multi }: { multi: boolean }) {
     </Dialog>
   );
 
-  function DashboardAddApplicationForm() {
+  function ApplicationAddForm() {
     return (
       <Form {...form}>
-        <form id={FORM_ID} onSubmit={form.handleSubmit(onSubmit)}>
+        <form id="application-add" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="grid gap-4 px-4 md:px-0">
             <FormField
               control={form.control}
