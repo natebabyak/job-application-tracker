@@ -28,9 +28,7 @@ import {
 import { signOut } from "next-auth/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTheme } from "next-themes";
-import DialogDrawer from "./dialog-drawer";
-import { Button } from "@/components/ui/button";
-import AddApplicationForm from "./add-application-form";
+import { DashboardAddApplication } from "./add-application";
 
 export default function DashboardSidebar({
   session,
@@ -49,12 +47,8 @@ export default function DashboardSidebar({
       </SidebarHeader>
       <SidebarContent>
         <SidebarHeader>
-          <DialogDrawer
-            trigger={<Button>Add application</Button>}
-            title="Add application"
-            content={<AddApplicationForm />}
-            form="add-application-form"
-          />
+          <DashboardAddApplication multi={false} />
+          <DashboardAddApplication multi={true} />
         </SidebarHeader>
         <SidebarGroup>
           <SidebarGroupLabel>Filters</SidebarGroupLabel>

@@ -14,32 +14,38 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { ChevronRightIcon } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 import { Pie, PieChart } from "recharts";
 
 interface DashboardPieChartProps {
-  title: string;
-  description?: string;
-  chartData: Record<string, string | number>[];
-  chartConfig: ChartConfig;
-  dataKey: string;
-  nameKey: string;
+  title: "position" | "company" | "status";
+  data: Record<string, number>;
 }
 
-export default function DashboardPieChart({
-  title,
-  description,
-  chartData,
-  chartConfig,
-  dataKey,
-  nameKey,
-}: DashboardPieChartProps) {
+export function DashboardPieChart({ title, data }: DashboardPieChartProps) {
+  const chartData = Object.entries(data).map((value, index) => ({
+    [title]: value[0],
+    applications: value[1],
+    fill: `color-mix(in srgb, var(--chart-1) ${100 - 10 * index}%, white)`,
+  }));
+
+  const chartConfig = Object.fromEntries(
+    Object.entries(data).map((value, index) => [
+      value[0],
+      {
+        label: value[0][0].toUpperCase() + value[0].slice(1),
+        color: `color-mix(in srgb, var(--chart-1) ${100 - 10 * index}%, white)`,
+      },
+    ]),
+  ) satisfies ChartConfig;
+
   return (
-    <Card className="from-primary/15 to-card bg-gradient-to-t">
+    <Card className="dark:from-primary/15 from-primary/5 to-card bg-gradient-to-t">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        {description && <CardDescription>{description}</CardDescription>}
+        <CardTitle className="capitalize">{title}</CardTitle>
+        <CardDescription>Your applications grouped by {title}</CardDescription>
       </CardHeader>
+      <Separator />
       <CardContent>
         <ChartContainer config={chartConfig}>
           <PieChart>
@@ -47,14 +53,11 @@ export default function DashboardPieChart({
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Pie data={chartData} dataKey={dataKey} nameKey={nameKey} />
+            <Pie data={chartData} dataKey="applications" nameKey={title} />
           </PieChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter>
-        Learn more
-        <ChevronRightIcon />
-      </CardFooter>
+      <CardFooter>One insight will go here</CardFooter>
     </Card>
   );
 }

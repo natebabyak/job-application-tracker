@@ -13,17 +13,12 @@ import { auth } from "@/auth";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Sidebar from "./sidebar";
-import ApplicationsBySubmittedOnChart from "./applications-by-submitted-on-chart";
-import PieChart from "./pie-chart";
-import Table from "./table";
-import {
-  Application,
-  ApplicationStatus,
-  applicationStatuses,
-} from "./constants";
-import { ChartConfig } from "@/components/ui/chart";
-import { columns } from "./columns";
 import jwt from "jsonwebtoken";
+import { DashboardApplicationsBySubmittedOnChart } from "./applications-by-submitted-on-chart";
+import { Application, ApplicationStatus } from "@/app/dashboard/constants";
+import { DashboardTable } from "./table";
+import { columns } from "./columns";
+import { DashboardPieChart } from "./pie-chart";
 
 export const metadata: Metadata = {
   title: "Dashboard - Apt",
@@ -33,15 +28,17 @@ export default async function Page() {
   const session = await auth();
   if (!session) redirect("/");
 
-  const token = jwt.sign({ sub: session.user?.id }, process.env.JWT_SECRET!, {
-    algorithm: "HS256",
-    expiresIn: "1m",
-  });
+  const token = jwt.sign(
+    { email: session.user?.email },
+    process.env.JWT_SECRET!,
+    { algorithm: "HS256", expiresIn: "1m" },
+  );
 
   const response = await fetch(`${process.env.BACKEND_URL}/applications/me`, {
     headers: { Authorization: `Bearer ${token}` },
   });
-  const applications: Application[] = await response.json();
+
+  const applications = ((await response.json()) as Application[]) ?? [];
 
   const counts = {
     positions: {} as Record<string, number>,
@@ -55,6 +52,38 @@ export default async function Page() {
     counts.statuses[status] = (counts.statuses[status] || 0) + 1;
   }
 
+  const sortedCounts = {
+    positions: Object.entries(counts.positions).sort((a, b) => b[1] - a[1]),
+    companies: Object.entries(counts.companies).sort((a, b) => b[1] - a[1]),
+    statuses: Object.entries(counts.statuses).sort((a, b) => b[1] - a[1]),
+  };
+
+  if (sortedCounts.positions.length > 10) {
+    let sum = 0;
+
+    for (let i = 10; i < sortedCounts.companies.length; i++) {
+      sum += sortedCounts.companies[i][1];
+    }
+
+    sortedCounts.companies[10] = ["Other", sum];
+  }
+
+  if (sortedCounts.companies.length > 10) {
+    let sum = 0;
+
+    for (let i = 10; i < sortedCounts.companies.length; i++) {
+      sum += sortedCounts.companies[i][1];
+    }
+
+    sortedCounts.companies[10] = ["Other", sum];
+  }
+
+  const slicedCounts = {
+    positions: Object.fromEntries(sortedCounts.positions.slice(0, 11)),
+    companies: Object.fromEntries(sortedCounts.companies.slice(0, 11)),
+    statuses: Object.fromEntries(sortedCounts.statuses),
+  };
+
   return (
     <SidebarProvider>
       <Sidebar session={session} />
@@ -67,85 +96,17 @@ export default async function Page() {
             <TooltipContent side="right">Toggle sidebar</TooltipContent>
           </Tooltip>
           <Separator orientation="vertical" />
+          <span className="text-muted-foreground font-medium">Dashboard</span>
         </div>
         <Separator />
-        <div className="grid gap-4 p-8">
-          <div className="grid grid-cols-3 gap-8">
-            <PieChart
-              title="Applications by Status"
-              chartData={Object.entries(counts.statuses).map((status) => {
-                return { status: status[0], applications: status[1] };
-              })}
-              chartConfig={
-                {
-                  applications: { label: "Applications" },
-                  ...Object.fromEntries(
-                    applicationStatuses.map((applicationStatus, index) => [
-                      applicationStatus,
-                      {
-                        label:
-                          applicationStatus[0].toUpperCase() +
-                          applicationStatus.slice(1),
-                        color: `var(--chart-${index})`,
-                      },
-                    ]),
-                  ),
-                } satisfies ChartConfig
-              }
-              dataKey="applications"
-              nameKey="status"
-            />
-            <PieChart
-              title="Applications by Status"
-              chartData={Object.entries(counts.statuses).map((status) => {
-                return { status: status[0], applications: status[1] };
-              })}
-              chartConfig={
-                {
-                  applications: { label: "Applications" },
-                  ...Object.fromEntries(
-                    applicationStatuses.map((applicationStatus, index) => [
-                      applicationStatus,
-                      {
-                        label:
-                          applicationStatus[0].toUpperCase() +
-                          applicationStatus.slice(1),
-                        color: `var(--chart-${index})`,
-                      },
-                    ]),
-                  ),
-                } satisfies ChartConfig
-              }
-              dataKey="applications"
-              nameKey="status"
-            />
-            <PieChart
-              title="Applications by Status"
-              chartData={Object.entries(counts.statuses).map((status) => {
-                return { status: status[0], applications: status[1] };
-              })}
-              chartConfig={
-                {
-                  applications: { label: "Applications" },
-                  ...Object.fromEntries(
-                    applicationStatuses.map((applicationStatus, index) => [
-                      applicationStatus,
-                      {
-                        label:
-                          applicationStatus[0].toUpperCase() +
-                          applicationStatus.slice(1),
-                        color: `var(--chart-${index})`,
-                      },
-                    ]),
-                  ),
-                } satisfies ChartConfig
-              }
-              dataKey="applications"
-              nameKey="status"
-            />
+        <div className="grid gap-8 p-8">
+          <div className="grid gap-8 lg:grid-cols-3">
+            <DashboardPieChart title="position" data={slicedCounts.positions} />
+            <DashboardPieChart title="company" data={slicedCounts.companies} />
+            <DashboardPieChart title="status" data={slicedCounts.statuses} />
           </div>
-          <ApplicationsBySubmittedOnChart />
-          <Table columns={columns} data={applications} />
+          <DashboardApplicationsBySubmittedOnChart />
+          <DashboardTable columns={columns} data={applications} />
         </div>
       </SidebarInset>
     </SidebarProvider>

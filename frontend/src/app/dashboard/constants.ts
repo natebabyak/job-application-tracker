@@ -14,13 +14,15 @@ export type ApplicationStatus = (typeof applicationStatuses)[number];
 export const ApplicationSchema = z.object({
   position: z
     .string()
+    .trim()
     .min(1, "Position is required")
     .max(255, "Position is too long"),
   company: z
     .string()
+    .trim()
     .min(1, "Company is required")
     .max(255, "Company is too long"),
-  submittedOn: z.date("Submitted on is required"),
+  submitted_on: z.date(),
   status: z.enum(applicationStatuses),
 });
 

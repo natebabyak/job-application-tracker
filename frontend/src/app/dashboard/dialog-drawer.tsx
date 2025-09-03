@@ -24,14 +24,14 @@ interface DashboardDialogDrawerProps {
   trigger: ReactNode;
   title: string;
   content: ReactNode;
-  form?: string;
+  formId?: string;
 }
 
-export default function DashboardDialogDrawer({
+export function DashboardDialogDrawer({
   trigger,
   title,
   content,
-  form,
+  formId,
 }: DashboardDialogDrawerProps) {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
@@ -46,10 +46,10 @@ export default function DashboardDialogDrawer({
         {content}
         <DrawerFooter className="flex justify-end gap-4">
           <DrawerClose asChild>
-            <Button>{form ? "Cancel" : "Done"}</Button>
+            <Button>{formId ? "Cancel" : "Done"}</Button>
           </DrawerClose>
-          {form && (
-            <Button form={form} type="submit">
+          {formId && (
+            <Button form={formId} type="submit">
               Submit
             </Button>
           )}
@@ -66,12 +66,12 @@ export default function DashboardDialogDrawer({
         {content}
         <DialogFooter className="flex justify-end gap-4">
           <DialogClose asChild>
-            <Button variant={form ? "outline" : "default"}>
-              {form ? "Cancel" : "Done"}
+            <Button variant={formId ? "outline" : "default"}>
+              {formId ? "Cancel" : "Done"}
             </Button>
           </DialogClose>
-          {form && (
-            <Button form={form} type="submit">
+          {formId && (
+            <Button form={formId} type="submit">
               Submit
             </Button>
           )}

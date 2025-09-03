@@ -13,7 +13,7 @@ router = APIRouter(
 )
 
 
-@router.post('/', response_model=ApplicationRead)
+@router.post('/', status_code=status.HTTP_201_CREATED, response_model=ApplicationRead)
 async def create_application(
     application_create: ApplicationCreate,
     user_id: Annotated[str, Depends(get_current_user_id)],
