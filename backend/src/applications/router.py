@@ -58,7 +58,7 @@ async def get_application(
     return application
 
 
-@router.put('/{application_id}', response_model=ApplicationRead)
+@router.patch('/{application_id}', response_model=ApplicationRead)
 async def update_application(
     application_id: UUID,
     application_update: ApplicationUpdate,
@@ -72,13 +72,15 @@ async def update_application(
             detail=f"Application with ID '{application_id}' not found"
         )
 
-    updated_application = Application(**application_update.model_dump())
+    application.position = application_update.position
+    application.company = application_update.company
+    application.submitted_on = application_update.submitted_on
+    application.status = application_update.status
 
-    session.add(updated_application)
     session.commit()
-    session.refresh(updated_application)
+    session.refresh(application)
 
-    return updated_application
+    return application
 
 
 @router.delete('/me', status_code=status.HTTP_204_NO_CONTENT)

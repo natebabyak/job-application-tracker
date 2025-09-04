@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 
-export const PUT = auth(async function PUT(req, { params }) {
+export const PATCH = auth(async function PATCH(req, { params }) {
   const { id } = await params;
 
   if (!req.auth) {
@@ -20,7 +20,7 @@ export const PUT = auth(async function PUT(req, { params }) {
   const response = await fetch(
     `${process.env.BACKEND_URL}/applications/${id}`,
     {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

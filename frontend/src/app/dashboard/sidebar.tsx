@@ -28,7 +28,7 @@ import {
 import { signOut } from "next-auth/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTheme } from "next-themes";
-import { DashboardApplicationAdd } from "./application-add";
+import { DashboardAddApplicationButton } from "./add-application-button";
 
 interface DashboardSidebarProps {
   session: Session;
@@ -47,8 +47,7 @@ export function DashboardSidebar({ session }: DashboardSidebarProps) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarHeader>
-          <DashboardApplicationAdd multi={false} />
-          <DashboardApplicationAdd multi={true} />
+          <DashboardAddApplicationButton />
         </SidebarHeader>
         <SidebarGroup>
           <SidebarGroupLabel>Filters</SidebarGroupLabel>

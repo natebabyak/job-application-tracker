@@ -14,10 +14,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
 import { DashboardApplicationsBySubmittedOnChart } from "./applications-by-submitted-on-chart";
-import {
-  ApplicationReceive,
-  ApplicationStatus,
-} from "@/app/dashboard/constants";
+import { ApplicationStatus, ApplicationWithId } from "@/lib/constants";
 import { DashboardTable } from "./table";
 import { columns } from "./columns";
 import { DashboardPieChart } from "./pie-chart";
@@ -41,7 +38,7 @@ export default async function Page() {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  const applications = ((await response.json()) as ApplicationReceive[]) ?? [];
+  const applications = ((await response.json()) as ApplicationWithId[]) ?? [];
 
   const counts = {
     positions: {} as Record<string, number>,
@@ -61,29 +58,29 @@ export default async function Page() {
     statuses: Object.entries(counts.statuses).sort((a, b) => b[1] - a[1]),
   };
 
-  if (sortedCounts.positions.length > 10) {
+  if (sortedCounts.positions.length > 5) {
     let sum = 0;
 
-    for (let i = 10; i < sortedCounts.companies.length; i++) {
-      sum += sortedCounts.companies[i][1];
+    for (let i = 10; i < sortedCounts.positions.length; i++) {
+      sum += sortedCounts.positions[i][1];
     }
 
-    sortedCounts.companies[10] = ["Other", sum];
+    sortedCounts.positions[5] = ["Other", sum];
   }
 
-  if (sortedCounts.companies.length > 10) {
+  if (sortedCounts.companies.length > 5) {
     let sum = 0;
 
     for (let i = 10; i < sortedCounts.companies.length; i++) {
       sum += sortedCounts.companies[i][1];
     }
 
-    sortedCounts.companies[10] = ["Other", sum];
+    sortedCounts.companies[5] = ["Other", sum];
   }
 
   const slicedCounts = {
-    positions: Object.fromEntries(sortedCounts.positions.slice(0, 11)),
-    companies: Object.fromEntries(sortedCounts.companies.slice(0, 11)),
+    positions: Object.fromEntries(sortedCounts.positions.slice(0, 6)),
+    companies: Object.fromEntries(sortedCounts.companies.slice(0, 6)),
     statuses: Object.fromEntries(sortedCounts.statuses),
   };
 

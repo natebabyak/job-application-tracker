@@ -1,5 +1,6 @@
-import { ApplicationReceive } from "./constants";
+import { Application } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
+import { DashboardApplicationForm } from "./application-form";
 import {
   Dialog,
   DialogClose,
@@ -18,99 +19,88 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Trash2Icon } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { formatISO } from "date-fns";
 
-interface DashboardApplicationDeleteProps {
-  application: ApplicationReceive;
-}
-
-export function DashboardApplicationDelete({
-  application: { position, company, id },
-}: DashboardApplicationDeleteProps) {
+export function DashboardAddApplicationButton() {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
-  const handleClick = async () => {
-    const response = await fetch(`/api/applications/${id}`, {
-      method: "DELETE",
+  const defaultValues: Application = {
+    position: "",
+    company: "",
+    submitted_on: new Date(),
+    status: "submitted",
+  };
+
+  const onSubmit = async (values: Application) => {
+    const application = {
+      ...values,
+      submitted_on: formatISO(values.submitted_on, { representation: "date" }),
+    };
+
+    const response = await fetch("/api/applications", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(application),
     });
 
-    if (!response.ok) {
-      throw new Error("Something went wrong");
-    }
+    if (!response.ok) throw new Error("Something went wrong");
 
     setOpen(false);
-
-    setTimeout(() => void 0, 10);
-
-    router.refresh();
+    setTimeout(() => router.refresh(), 300);
   };
 
   return isMobile ? (
     <Drawer onOpenChange={setOpen} open={open}>
       <DrawerTrigger asChild>
-        <Trigger />
+        <Button>Add Application</Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle className="justify-start">
-            Delete application
-          </DrawerTitle>
+          <DrawerTitle className="justify-start">Add Application</DrawerTitle>
         </DrawerHeader>
-        <Content />
+        <DashboardApplicationForm
+          defaultValues={defaultValues}
+          onSubmit={onSubmit}
+        />
         <DrawerFooter className="flex justify-end gap-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
           </DrawerClose>
-          <Footer />
+          <Button form="application" type="submit">
+            Submit
+          </Button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
   ) : (
     <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>
-        <Trigger />
+        <Button>Add Application</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete application</DialogTitle>
+          <DialogTitle>Add Application</DialogTitle>
         </DialogHeader>
-        <Content />
+        <DashboardApplicationForm
+          defaultValues={defaultValues}
+          onSubmit={onSubmit}
+        />
         <DialogFooter className="flex justify-end gap-2">
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Footer />
+          <Button form="application" type="submit">
+            Submit
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
-
-  function Trigger() {
-    return (
-      <Button onClick={() => setOpen(true)} size="icon" variant="outline">
-        <Trash2Icon />
-      </Button>
-    );
-  }
-
-  function Content() {
-    return (
-      <p>
-        Are you sure you want to delete <b>{position}</b> @ <b>{company}</b>?
-      </p>
-    );
-  }
-
-  function Footer() {
-    return (
-      <Button onClick={handleClick} variant="destructive">
-        Confirm
-      </Button>
-    );
-  }
 }

@@ -26,6 +26,12 @@ export const ApplicationSchema = z.object({
   status: z.enum(applicationStatuses),
 });
 
-export type ApplicationSend = z.infer<typeof ApplicationSchema>;
+export type Application = z.infer<typeof ApplicationSchema>;
 
-export type ApplicationReceive = ApplicationSend & { id: string };
+export type ApplicationWithId = {
+  position: string;
+  company: string;
+  submitted_on: string;
+  status: ApplicationStatus;
+  id: string;
+};

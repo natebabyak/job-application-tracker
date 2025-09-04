@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -17,12 +16,13 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Pie, PieChart } from "recharts";
 
-interface DashboardPieChartProps {
+export function DashboardPieChart({
+  title,
+  data,
+}: {
   title: "position" | "company" | "status";
   data: Record<string, number>;
-}
-
-export function DashboardPieChart({ title, data }: DashboardPieChartProps) {
+}) {
   const chartData = Object.entries(data).map((value, index) => ({
     [title]: value[0],
     applications: value[1],
@@ -57,7 +57,6 @@ export function DashboardPieChart({ title, data }: DashboardPieChartProps) {
           </PieChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter>One insight will go here</CardFooter>
     </Card>
   );
 }

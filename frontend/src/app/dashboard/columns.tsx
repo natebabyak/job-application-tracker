@@ -1,15 +1,15 @@
 "use client";
 
-import { ApplicationReceive } from "./constants";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import { DashboardTableHeader } from "./table-header";
 import { DashboardTableCell } from "./table-cell";
-import { DashboardApplicationDelete } from "./application-delete";
-import { DashboardApplicationEdit } from "./application-edit";
+import { ApplicationWithId } from "../../lib/constants";
+import { DashboardEditApplicationButton } from "./edit-application-button";
+import { DashboardDeleteApplicationButton } from "./delete-application-button";
 
-export const columns: ColumnDef<ApplicationReceive>[] = [
+export const columns: ColumnDef<ApplicationWithId>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -51,13 +51,7 @@ export const columns: ColumnDef<ApplicationReceive>[] = [
     header: ({ column }) => (
       <DashboardTableHeader column={column} title="Submitted On" />
     ),
-    cell: ({ row }) => (
-      <span className="font-medium">
-        {new Date(row.original.submitted_on).toLocaleDateString(undefined, {
-          dateStyle: "medium",
-        })}
-      </span>
-    ),
+    cell: ({ row }) => <DashboardTableCell text={row.original.submitted_on} />,
   },
   {
     accessorKey: "status",
@@ -86,8 +80,8 @@ export const columns: ColumnDef<ApplicationReceive>[] = [
     id: "actions",
     cell: ({ row }) => (
       <div className="flex justify-end gap-2">
-        <DashboardApplicationEdit />
-        <DashboardApplicationDelete application={row.original} />
+        <DashboardEditApplicationButton application={row.original} />
+        <DashboardDeleteApplicationButton application={row.original} />
       </div>
     ),
     enableSorting: false,
