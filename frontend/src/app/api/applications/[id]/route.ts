@@ -59,7 +59,6 @@ export const DELETE = auth(async function DELETE(req, { params }) {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
       },
     },
   );

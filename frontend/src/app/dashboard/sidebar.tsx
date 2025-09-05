@@ -12,7 +12,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { EllipsisIcon, LogOutIcon } from "lucide-react";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  BarChartIcon,
+  Edit2Icon,
+  EllipsisIcon,
+  LogOutIcon,
+  PieChartIcon,
+  PlusIcon,
+  Table2Icon,
+  Trash2Icon,
+} from "lucide-react";
 import { Session } from "next-auth";
 import {
   Sidebar,
@@ -50,9 +61,45 @@ export function DashboardSidebar({ session }: DashboardSidebarProps) {
           <DashboardAddApplicationButton />
         </SidebarHeader>
         <SidebarGroup>
-          <SidebarGroupLabel>Filters</SidebarGroupLabel>
+          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarMenu>
-            <SidebarMenuButton>Add application</SidebarMenuButton>
+            <SidebarMenuButton>
+              <ArrowUpIcon />
+              Top
+            </SidebarMenuButton>
+            <SidebarMenuButton>
+              <PieChartIcon />
+              Pie Chart
+            </SidebarMenuButton>
+            <SidebarMenuButton>
+              <BarChartIcon />
+              Bar Chart
+            </SidebarMenuButton>
+            <SidebarMenuButton>
+              <Table2Icon />
+              Table
+            </SidebarMenuButton>
+            <SidebarMenuButton>
+              <ArrowDownIcon />
+              Bottom
+            </SidebarMenuButton>
+          </SidebarMenu>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Actions</SidebarGroupLabel>
+          <SidebarMenu>
+            <SidebarMenuButton>
+              <PlusIcon />
+              Add Application
+            </SidebarMenuButton>
+            <SidebarMenuButton>
+              <Edit2Icon />
+              Edit Application
+            </SidebarMenuButton>
+            <SidebarMenuButton>
+              <Trash2Icon />
+              Delete Application
+            </SidebarMenuButton>
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
@@ -61,9 +108,9 @@ export function DashboardSidebar({ session }: DashboardSidebarProps) {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton>
-                  <div className="flex">
-                    <Avatar>
+                <SidebarMenuButton className="flex h-fit items-center justify-between">
+                  <div className="flex items-center gap-1">
+                    <Avatar className="size-8">
                       <AvatarImage src={session?.user?.image ?? undefined} />
                       <AvatarFallback>
                         <Skeleton />
@@ -71,7 +118,7 @@ export function DashboardSidebar({ session }: DashboardSidebarProps) {
                     </Avatar>
                     <div className="flex flex-col">
                       {session ? (
-                        <span className="text-sm">{session.user?.name}</span>
+                        <span className="text-xs">{session.user?.name}</span>
                       ) : (
                         <Skeleton />
                       )}
@@ -86,9 +133,9 @@ export function DashboardSidebar({ session }: DashboardSidebarProps) {
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="right">
-                <DropdownMenuLabel className="flex">
-                  <div className="flex">
-                    <Avatar>
+                <DropdownMenuLabel className="flex h-fit items-center">
+                  <div className="flex items-center gap-1">
+                    <Avatar className="size-8">
                       <AvatarImage src={session?.user?.image ?? undefined} />
                       <AvatarFallback>
                         <Skeleton />
@@ -96,7 +143,7 @@ export function DashboardSidebar({ session }: DashboardSidebarProps) {
                     </Avatar>
                     <div className="flex flex-col">
                       {session ? (
-                        <span className="text-sm">{session.user?.name}</span>
+                        <span className="text-xs">{session.user?.name}</span>
                       ) : (
                         <Skeleton />
                       )}

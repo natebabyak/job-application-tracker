@@ -2,13 +2,13 @@
 FROM python:3.13-slim
 
 # Set the working directory
-WORKDIR /src
+WORKDIR /app
 
 # Copy requirements.txt to the working directory
 COPY requirements.txt .
 
 # Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 # Copy remaining files to the working directory
 COPY . .
@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 8000
 
 # Run the application
-CMD ["uvicorn", "main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]

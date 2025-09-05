@@ -40,16 +40,35 @@ export default async function Page() {
 
   const applications = ((await response.json()) as ApplicationWithId[]) ?? [];
 
+  const today = new Date();
+  const length = 90;
+
+  const days = Array.from({ length }, (_, i) => {
+    const day = new Date(today);
+    day.setDate(today.getDate() - i);
+
+    return {
+      date: day.toISOString().split("T")[0],
+      applications: 0,
+    };
+  }).reverse();
+
   const counts = {
     positions: {} as Record<string, number>,
     companies: {} as Record<string, number>,
     statuses: {} as Record<ApplicationStatus, number>,
   };
 
-  for (const { position, company, status } of applications) {
+  const dayIndexMap = Object.fromEntries(days.map((d, i) => [d.date, i]));
+
+  for (const { position, company, submitted_on, status } of applications) {
     counts.positions[position] = (counts.positions[position] || 0) + 1;
     counts.companies[company] = (counts.companies[company] || 0) + 1;
     counts.statuses[status] = (counts.statuses[status] || 0) + 1;
+
+    if (dayIndexMap[submitted_on]) {
+      days[dayIndexMap[submitted_on]].applications++;
+    }
   }
 
   const sortedCounts = {
@@ -105,7 +124,7 @@ export default async function Page() {
             <DashboardPieChart title="company" data={slicedCounts.companies} />
             <DashboardPieChart title="status" data={slicedCounts.statuses} />
           </div>
-          <DashboardApplicationsBySubmittedOnChart />
+          <DashboardApplicationsBySubmittedOnChart chartData={days} />
           <DashboardTable columns={columns} data={applications} />
         </div>
       </SidebarInset>
