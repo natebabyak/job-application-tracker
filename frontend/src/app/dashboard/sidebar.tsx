@@ -63,23 +63,23 @@ export function DashboardSidebar({ session }: DashboardSidebarProps) {
         <SidebarGroup>
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarMenu>
-            <SidebarMenuButton>
+            <SidebarMenuButton disabled={true}>
               <ArrowUpIcon />
               Top
             </SidebarMenuButton>
-            <SidebarMenuButton>
+            <SidebarMenuButton disabled={true}>
               <PieChartIcon />
               Pie Chart
             </SidebarMenuButton>
-            <SidebarMenuButton>
+            <SidebarMenuButton disabled={true}>
               <BarChartIcon />
               Bar Chart
             </SidebarMenuButton>
-            <SidebarMenuButton>
+            <SidebarMenuButton disabled={true}>
               <Table2Icon />
               Table
             </SidebarMenuButton>
-            <SidebarMenuButton>
+            <SidebarMenuButton disabled={true}>
               <ArrowDownIcon />
               Bottom
             </SidebarMenuButton>
@@ -88,15 +88,15 @@ export function DashboardSidebar({ session }: DashboardSidebarProps) {
         <SidebarGroup>
           <SidebarGroupLabel>Actions</SidebarGroupLabel>
           <SidebarMenu>
-            <SidebarMenuButton>
+            <SidebarMenuButton disabled={true}>
               <PlusIcon />
               Add Application
             </SidebarMenuButton>
-            <SidebarMenuButton>
+            <SidebarMenuButton disabled={true}>
               <Edit2Icon />
               Edit Application
             </SidebarMenuButton>
-            <SidebarMenuButton>
+            <SidebarMenuButton disabled={true}>
               <Trash2Icon />
               Delete Application
             </SidebarMenuButton>

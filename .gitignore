@@ -39,7 +39,7 @@ __pycache__/
 /frontend/.pnpm-debug.log*
 
 # Frontend .env
-/frontend/.env*
+/frontend/.env
 
 # Frontend Vercel
 /frontend/.vercel

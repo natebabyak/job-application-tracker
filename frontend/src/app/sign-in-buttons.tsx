@@ -13,7 +13,7 @@ export function SignInButtons() {
         Sign in with GitHub
       </Button>
       <Button
-        onClick={() => signIn("github", { redirectTo: "/dashboard" })}
+        onClick={() => signIn("discord", { redirectTo: "/dashboard" })}
         variant="outline"
       >
         <DiscordIcon />

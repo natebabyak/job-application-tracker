@@ -1,24 +1,6 @@
 from enum import Enum
 
 
-class Level(str, Enum):
-    INTERN = 'intern'
-    ENTRY = 'entry-level'
-    JUNIOR = 'junior'
-    MID = 'mid-level'
-    SENIOR = 'senior'
-    STAFF = 'staff'
-    PRINCIPAL = 'principal'
-    DISTINGUISHED = 'distinguished'
-    FELLOW = 'fellow'
-
-
-class LocationType(str, Enum):
-    ONSITE = 'on-site'
-    HYBRID = 'hybrid'
-    REMOTE = 'remote'
-
-
 class Status(str, Enum):
     ACCEPTED = 'accepted'
     DECLINED = 'declined'
