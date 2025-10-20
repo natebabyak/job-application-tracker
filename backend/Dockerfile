@@ -13,8 +13,5 @@ RUN pip install --no-cache-dir --upgrade -r requirements.txt
 # Copy remaining files to the working directory
 COPY . .
 
-# Expose the port (optional, just for docs)
-EXPOSE 8080
-
-# Run the application with the PORT env variable
+# Run the application
 CMD ["sh", "-c", "uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-8080}"]
