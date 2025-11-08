@@ -1,23 +1,21 @@
-# Set the base image
-FROM node:20-alpine
-
-# Set the working directory
+# Stage 1: Install dependencies and build the Next.js app
+FROM node:20-alpine AS builder
 WORKDIR /app
-
-# Copy requirements.txt to the working directory
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
-
-# Copy remaining files to the working directory
 COPY . .
-
-# Build the application
 RUN npm run build
 
-# Set the network port
-EXPOSE 3000
+# Stage 2: Run the Next.js app
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/public ./public
 
-# Run the application
-CMD ["npm", "run", "start"]
+ENV PORT 8080
+
+EXPOSE 8080
+
+CMD ["npm", "start"]
