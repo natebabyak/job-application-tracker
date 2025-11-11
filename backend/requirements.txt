@@ -1,4 +1,5 @@
 fastapi
+gunicorn
 psycopg2-binary
 pyjwt
 sqlmodel

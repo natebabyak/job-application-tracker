@@ -1,20 +1,25 @@
-# Set the base image
-FROM python:3.13-slim
+# 1. Base Image: Use a stable Python version (3.11 or 3.12 recommended)
+FROM python:3.11-slim
 
-# Set the working directory
+# Set environment variables for non-buffered output
+ENV PYTHONUNBUFFERED 1
+
+# 2. Set the working directory
 WORKDIR /app
 
-# Copy requirements.txt to the working directory
+# 3. Copy requirements.txt and install dependencies
+# We install dependencies first to leverage Docker caching (faster rebuilds if code changes)
 COPY requirements.txt ./
+# We need gunicorn and uvicorn in the requirements for the production command
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install dependencies
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
-
-# Copy remaining files to the working directory
+# 4. Copy remaining application files
 COPY . .
 
-# Set the network port
-EXPOSE 8080
+# 5. Set the network port (default for our command)
+EXPOSE 8000
 
-# Run the application
-CMD uvicorn src.main:app --host 0.0.0.0 --port ${PORT}
+# 6. Run the application using Gunicorn with Uvicorn workers
+# This is much more robust for production, handling multiple requests concurrently
+# We assume the main application instance is named 'app' in 'src/main.py'
+CMD ["gunicorn", "src.main:app", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]
