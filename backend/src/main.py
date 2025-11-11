@@ -13,9 +13,21 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+
+@app.get("/")
+def root():
+    return {"message": "Backend is running"}
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+
 origins = [
     "http://localhost",
     "http://localhost:3000",
+    "https://main.d2dvvp3ymcum87.amplifyapp.com",
 ]
 
 app.add_middleware(
